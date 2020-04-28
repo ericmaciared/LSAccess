@@ -14,14 +14,14 @@
 
 
 //Main Config
-void initCPU(){
+void setup(){
 
 }
 
 
 
 
-int main(void){
+void loop(){
     //inits
 
     while(1){
