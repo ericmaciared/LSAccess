@@ -8,6 +8,8 @@
 #ifndef _TRFID_H_
 #define _TRFID_H_
 
+
+
 #define SS_PIN 53
 #define RST_PIN 49
 
@@ -23,5 +25,9 @@ void initTRFID(void);
 void motorTRFID(void);
 //Pre: RFID is initialized
 //Post:
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif

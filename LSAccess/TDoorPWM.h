@@ -8,6 +8,10 @@
 #ifndef _TDOORPWM_H_
 #define _TDOORPWM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LED 1
 //#define LED_DIRECTION TRISAbits.TRISA3 // --> BSF / BCF SFR,BIT,0
 
@@ -18,14 +22,19 @@
 
 //------------------------ FUNCTIONS ----------------------
 
-void initTPWM(void);
+void initTDoorPWM(void);
 //Pre: timer ADT has been initialized.
 //Post: asks for a timer and sets the PWM to the minimum DC.
 
-void motorPWM(void);
+void motorTDoorPWM(void);
 
-void setTimeHigh(char value);
+void DpSetTimeHigh(char value);
 //Pre: 0<= value <= TIMEPWM
 //Post: it sets a value to the DC of the PWM
 //proportional to "value".
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
 #endif

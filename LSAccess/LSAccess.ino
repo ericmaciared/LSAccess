@@ -7,25 +7,25 @@
  */
 
 //includes
-#include "RFID.h"
-
+#include "TTimer.h"
+#include "TDoorPWM.h"
 
 // Configuration Bits
 
 
 //Main Config
 void setup(){
-
+  //inits
+  
+  initTimer();
+  initTDoorPWM();
 }
 
 
-
-
+//Main Loop
 void loop(){
-    //inits
-
     while(1){
         //motors
-
+        motorTDoorPWM();
     }
 }
