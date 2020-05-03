@@ -7,27 +7,27 @@
 
 //------------------------ INCLUDES -----------------------
 
-#include <SPI.h>
-#include <MFRC522.h>
+//#include <SPI.h>
+//#include <MFRC522.h>
 
 #include "TRFID.h"
 
 //------------------------ VARIABLES ----------------------
 
-MFRC522 mfrc522(SS_PIN, RST_PIN);
+//MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 
 //------------------------ FUNCTIONS ----------------------
 
 void initTRFID(void) {
-  Serial.begin(9600);
-  SPI.begin();
-  mfrc522.PCD_Init();
-  Serial.println("RFID reading UID");
+//  Serial.begin(9600);
+  //SPI.begin();
+  //mfrc522.PCD_Init();
+  //Serial.println("RFID reading UID");
 }
 
 void motorTRFID(void){
-  if(mfrc522.PICC_IsNewCardPresent()){
+  /*if(mfrc522.PICC_IsNewCardPresent()){
     if(mfrc522.PICC_ReadCardSerial()){
       Serial.print("Tag UID:");
       for(byte i = 0; i < mfrc522.uid.size; i++){
@@ -38,5 +38,5 @@ void motorTRFID(void){
       Serial.println();
       mfrc522.PICC_HaltA();
     }
-  }
+  }*/
 }
