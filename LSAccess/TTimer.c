@@ -8,6 +8,7 @@
 //------------------------ INCLUDES -----------------------
 
 #include "TTimer.h"
+#include "arduino.h"
 
 #define TI_NUMTIMERS 25
 #define TI_MAXTICS 30000

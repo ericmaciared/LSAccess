@@ -7,6 +7,7 @@
  */
 
 //includes
+#include "arduino.h"
 #include "TTimer.h"
 #include "TDoorPWM.h"
 
