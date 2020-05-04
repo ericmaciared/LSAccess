@@ -20,7 +20,7 @@
 //------------------------ FUNCTIONS ----------------------
 
 void initTRFID(void) {
-//  Serial.begin(9600);
+  Serial.begin(9600);
   //SPI.begin();
   //mfrc522.PCD_Init();
   //Serial.println("RFID reading UID");

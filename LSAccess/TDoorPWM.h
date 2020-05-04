@@ -12,13 +12,12 @@
 extern "C" {
 #endif
 
-#define LED 1
-//#define LED_DIRECTION TRISAbits.TRISA3 // --> BSF / BCF SFR,BIT,0
-
+#define DOOR 22
 
 //------------------------ INCLUDES -----------------------
 
 #include "TTimer.h"
+#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
 

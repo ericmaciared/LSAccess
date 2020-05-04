@@ -32,4 +32,4 @@
 #define PULSEBL
 
 //Door
-#define LED 22
+#define DOOR 22

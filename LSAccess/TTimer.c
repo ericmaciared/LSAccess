@@ -43,9 +43,6 @@ void initTimer(void) {
 	for (counter = 0; counter < TI_NUMTIMERS; counter++) {
 		s_Timers[counter].b_busy=TI_FALSE;
 	}
-
-
-
 }
 
 void _TiRSITimer (void) {

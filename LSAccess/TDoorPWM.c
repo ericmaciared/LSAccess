@@ -20,8 +20,8 @@ static char door;
 //------------------------ FUNCTIONS ----------------------
 
 void initTDoorPWM(void) {
-  pinMode(LED, 0); //Set LED pin as OUTPUT
-  digitalWrite(LED, 0); //Initialize LED to LOW
+  pinMode(DOOR, OUTPUT); //Set DOOR pin as OUTPUT
+  digitalWrite(DOOR, LOW); //Initialize DOOR to LOW
   door = 0;
   tHigh = 0;
   timer = TiGetTimer();

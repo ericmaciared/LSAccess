@@ -7,9 +7,9 @@
  */
 
 //includes
-#include "arduino.h"
 #include "TTimer.h"
 #include "TDoorPWM.h"
+#include "TEUSART.h"
 
 // Configuration Bits
 
@@ -17,7 +17,6 @@
 //Main Config
 void setup(){
   //inits
-  
   initTimer();
   initTDoorPWM();
 }
