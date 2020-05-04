@@ -1,0 +1,35 @@
+//EUSART
+#define SIORX 0
+#define SIOTX 1
+
+//RFID
+#define SDA
+#define SCK
+#define MOS
+#define IMI
+#define RST
+
+//Keyboard
+#define COL0
+#define COL1
+#define COL2
+#define ROW0
+#define ROW1
+#define ROW2
+#define ROW3
+
+//Speaker
+#define AUDIO
+
+//LCD
+#define D7
+#define D6
+#define D5
+#define D4
+#define EN
+#define RW
+#define RS
+#define PULSEBL
+
+//Door
+#define LED 22
