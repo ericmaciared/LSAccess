@@ -4,7 +4,27 @@ User* UsGetUser(unsigned char index);
 //Pre: 0 < index < usersRegistered
 //Post: return pointer to user in index.
 
+User* UsRegisterUser(void);
+//Pre: There is enough space to register a new user.
+//Post: Returns pointer to new user space.
 
+void UsDeleteUser(User* user);
+//Pre: The pointer contains a user.
+//Post: Deletes data in index pointer.
+
+//Interface 1 AUTHENTICATION -> LCD
+void LcDisplayWelcome(User* user, unsigned char* uid);
+//Pre: --
+//Post: Displays welcome message with name if registered as well as the UID
+//for 3 seconds in the LCD Display
+
+void LcDisplayIntroduceUID(void);
+//Pre: --
+//Post: Displays 'Introduce UID' in LCD display
+
+void LcDisplayIntroduceName(void);
+//Pre: --
+//Post:
 
 //Interface 2 AUTHENTICATION -> SPEAKER
 void SpAddBeeps(char numBeeps);
