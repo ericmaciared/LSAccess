@@ -7,25 +7,11 @@
  */
 
 //includes
-#include "TTimer.h"
-#include "TDoorPWM.h"
-#include "TEUSART.h"
+#include "main.h"
 
-// Configuration Bits
-
-
-//Main Config
 void setup(){
-  //inits
-  initTimer();
-  initTDoorPWM();
 }
 
-
-//Main Loop
 void loop(){
-    while(1){
-        //motors
-        motorTDoorPWM();
-    }
+    main();
 }

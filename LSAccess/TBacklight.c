@@ -1,4 +1,4 @@
-//---------------------------------------------------------
+/*//---------------------------------------------------------
 // @File: TTimer*
 // @Purpose:
 // @Author: eric.macia
@@ -53,4 +53,4 @@ char getTBacklightDuty(void){
 
 void setTBacklightDuty(char newTime){
   timeOn = newTime;
-}
+}*/

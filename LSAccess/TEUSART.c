@@ -1,4 +1,4 @@
-//---------------------------------------------------------
+/*//---------------------------------------------------------
 // @File: TEUSART
 // @Purpose:
 // @Author: ericm
@@ -30,7 +30,7 @@ static char* GetTX(void);
 static char *temporal;*/
 
 //------------------------ FUNCTIONS ----------------------
-
+/*
 void initTEUSART(void) {
   //Post: Initialize the SIO at the pins RP2 (Tx) and RP4(Rx) & ask for a timer.
   // Unlock registers
@@ -56,8 +56,8 @@ void initTEUSART(void) {
   // Interruptions activated
   IEC0bits.U1RXIE = 1;
   HowManyTX = HowManyRX = InitRx = InitTx = EndRx = EndTx = 0;*/
-}
-
+/*}
+/*
 void motorTEUSART(void){
     /*switch(state){
         case 0:
@@ -83,38 +83,38 @@ void motorTEUSART(void){
             }
             break;
     }*/
-}
+/*}
 
 void SioPutsCooperatiu(char *s) {
     //Pre: The reference to the char *s is a const char or I can guaranty that
     //     it won't be overwritten until it has been send.
     //Post: Add *s at the queue of chains to send...
     /*PutTX(s);*/
-}
+/*}
 
 int SioCharAvail(void) {
 // Pre: returns the number of characters received that haven't been picked by the GetChar function yet.
 	/*return HowManyRX;*/
-}
+/*}
 
 char SioGetChar(void) {
 // Pre: SiCharAvail() Is greater than 0.
 // Post: Extracts and returns the first characters to the reception queue.
 	/*return GetRX();*/
-}
+/*}
 
 void SioSendChar(char c) {
 // Post: Wait until the previous character is send and sends this one.
 	/*while(U1STAbits.TRMT == 0) ClrWdt();
 	U1TXREG = c;
 	U1STAbits.UTXEN = 1;*/
-}
+/*}
 
 static void PutTX(char *c) {
 	/*BufferTX[InitTx++] = c;
 	if (InitTx == BUFFER_TX_SIZE) InitTx = 0;
 	HowManyTX++;*/
-}
+/*}
 
 static char* GetTX(void) {
 	/*char *tmp;
@@ -122,13 +122,13 @@ static char* GetTX(void) {
 	if (EndTx == BUFFER_TX_SIZE) EndTx = 0;
 	HowManyTX --;
 	return tmp;*/
-}
+/*}
 
 static void PutRX(char c) {
 	/*BufferRX[InitRx++] = c;
 	if (InitRx == BUFFER_RX_SIZE) InitRx = 0;
 	HowManyRX++;*/
-}
+/*}
 
 static char GetRX(void) {
 	/*char tmp;
@@ -136,11 +136,11 @@ static char GetRX(void) {
 	if (EndRx == BUFFER_RX_SIZE) EndRx = 0;
 	HowManyRX --;
 	return tmp;*/
-}
+/*}
 
 void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void) {
   /*
         IFS0bits.U1RXIF = 0;
 	if (U1STAbits.OERR == 1) U1STAbits.OERR = 0;
 	PutRX(U1RXREG);*/
-}
+/*} */

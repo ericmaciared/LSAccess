@@ -7,32 +7,28 @@
 
 //------------------------ INCLUDES -----------------------
 
-#include "TDoorPWM.h"
-
-#define TIME_PWM 20
+#include "TDoor.h"
 
 //------------------------ VARIABLES ----------------------
 
-static char tHigh;
 static char timer;
-static char door;
+static char open;
 
 //------------------------ FUNCTIONS ----------------------
 
 void initTDoorPWM(void) {
   pinMode(DOOR, OUTPUT); //Set DOOR pin as OUTPUT
   digitalWrite(DOOR, LOW); //Initialize DOOR to LOW
-  door = 0;
-  tHigh = 0;
+  open = 0;
   timer = TiGetTimer();
   TiResetTics(timer);
 }
 
-void DpSetTimeHigh(char value){
-//Pre: 0<= value <= TIMEPWM
-//Post: it sets a value to the DC of the PWM
-//proportional to "value".
-	tHigh = 2*value;
+
+void DoOpenDoor(void){
+//Pre: --
+//Post: Opens door for 3 seconds.
+  open = 1;
 }
 
 void motorTDoorPWM(void){

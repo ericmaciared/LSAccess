@@ -1,4 +1,4 @@
-#ifndef LCTLCD_H
+/*#ifndef LCTLCD_H
 #define	LCTLCD_H
 //
 // ADT for manipulating the alphanumeric display of the
@@ -58,3 +58,4 @@
 #define RWDown()				(LATBbits.LATB15 = 0)
 #define EnableUp()				(LATBbits.LATB5 = 1)
 #define EnableDown()                            (LATBbits.LATB5 = 0)
+*/

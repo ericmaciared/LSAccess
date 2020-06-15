@@ -23,7 +23,7 @@
 
 //------------------------ INCLUDES -----------------------
 #include "TTimer.h"
-#include "LcTLCD.h"
+#include "TLCD.h"
 
 //------------------------ DEFINES ------------------------
 #define FUNCTION_SET	0x20
