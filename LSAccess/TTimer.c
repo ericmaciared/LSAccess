@@ -40,7 +40,7 @@ void initTimer(void) {
 	}
 }
 
-void __atribute__((interrupt, no_auto_psv)) _TiRSITimer(void) {
+void __attribute__((interrupt, no_auto_psv)) _TiRSITimer(void) {
 //Timer Interrupt Service Routine
 //@16MHz (Tinst = 250nS), 0.1ms/Tinst = 400tics 2^16-400 = 0xFE70
 

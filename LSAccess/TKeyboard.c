@@ -12,10 +12,10 @@
 //------------------------ VARIABLES ----------------------
 
 static char timer;
-
+static char row;
 //------------------------ FUNCTIONS ----------------------
 
-void initTDoor(void) {
+void initTKeyboard(void) {
   pinMode(COL0, INPUT);
   pinMode(COL1, INPUT);
   pinMode(COL2, INPUT);
@@ -24,6 +24,7 @@ void initTDoor(void) {
   pinMode(ROW2, OUTPUT);
   pinMode(ROW3, OUTPUT);
   digitalWrite(ROW0, HIGH); //Initialize ROW0 to HIGH
+  row = 0;
   timer = TiGetTimer();
   TiResetTics(timer);
 }

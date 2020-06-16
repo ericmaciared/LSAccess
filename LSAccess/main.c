@@ -13,6 +13,7 @@
 
 //LOCAL INCLUDES
 #include "TTimer.h"
+#include "TDoor.h"
 /*
  *
  */
@@ -52,30 +53,10 @@ void initCPU(){
 int main(void){
     initCPU();
     initTimer();
+    initTDoor();
 
-    /*TiInit();
-    LeInit();
-    LcInit(2,16);
-    AuInit();
-    SwInit();
-    PbInit();
-    AdInit();
-    BlInit();
-    SiInit();
-    LcClear();
-    LcCursorOff();
-    LcGotoXY(0,0);
-    LcPutString("Booting...");
-    initMotorLCD();
-    initPropaganda();*/
     while(1){
-        /*MotorPushbutton();
-        BlMotor();
-        MotorLed();
-        MotorLCD();
-        MotorAudio();
-        MotorPropaganda();
-        MotorSIO();*/
+        motorTDoor();
 
     }
 }

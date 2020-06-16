@@ -1,5 +1,5 @@
 //---------------------------------------------------------
-// @File: TDoorPWM*
+// @File: TDoor*
 // @Purpose:
 // @Author: eric.macia
 // @Data: 03/05/2020
@@ -16,7 +16,7 @@ static char open;
 
 //------------------------ FUNCTIONS ----------------------
 
-void initTDoorPWM(void) {
+void initTDoor(void) {
   pinMode(DOOR, OUTPUT); //Set DOOR pin as OUTPUT
   digitalWrite(DOOR, HIGH); //Initialize DOOR to HIGH
   open = 0;
@@ -28,7 +28,7 @@ void DoOpenDoor(void){
   open = 1;
 }
 
-void motorTDoorPWM(void){
+void motorTDoor(void){
 	static char state = 0;
 	switch(state){
 		case 0:

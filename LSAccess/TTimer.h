@@ -12,14 +12,14 @@
 extern "C" {
 #endif
 
-//------------------------ INCLUDES -----------------------
-
-#include "arduino.h"
-
 #define NUMTIMERS 25
 #define MAXTICS 30000
 #define FALSE 0
 #define TRUE 1
+
+//------------------------ INCLUDES -----------------------
+
+#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
 
