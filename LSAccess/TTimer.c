@@ -9,67 +9,63 @@
 
 #include "TTimer.h"
 
-#define TI_NUMTIMERS 25
-#define TI_MAXTICS 30000
-#define TI_FALSE 0
-#define TI_TRUE 1
-
 //------------------------ VARIABLES ----------------------
 struct Timer {
-	unsigned int h_initialTics;
-	unsigned char b_busy;
-} s_Timers[TI_NUMTIMERS];
+	unsigned int initialTics;
+	unsigned char busy;
+} timers[NUMTIMERS];
 
-static unsigned int h_Tics=0;  //Each time an interrupt occurs we increment
-static char counter;
+static unsigned int tics=0;  //Each time an interrupt occurs we increment
+static unsigned char counter;
 
 //------------------------ FUNCTIONS ----------------------
 
 void initTimer(void) {
 	//Pre: --
 	//Post: Initializes the timer0 to interrupt each 1ms.
-	//@16MHz (Tinst = 250nS), 1ms/Tinst = 4000tics 2^16-4000 = 0xF060
+	//@16MHz (Tinst = 250nS), 0.1ms/Tinst = 400tics 2^16-400 = 0xFE70
 
 	TCCR1A = 0x00;	//Timer Control
 	TCCR1B = 0x07;	//We select external clock source on rising edge
 	TCCR1C = 0x00;
 
-	TCNT1H = 0xF0;	//Timer Values
-	TCNT1L = 0x60;
+	TCNT1H = 0xFe;	//Timer Values
+	TCNT1L = 0x70;
 
 	TIMSK1 = 0x01;	//Timer Overflow Interrupt enable
-	TIFR1 = 0x00;	//Interrupt flag
+	TIFR1 = 0x00;	  //Interrupt flag
 
-	for (counter = 0; counter < TI_NUMTIMERS; counter++) {
-		s_Timers[counter].b_busy=TI_FALSE;
+	for (counter = 0; counter < NUMTIMERS; counter++) {
+		timers[counter].busy = FALSE;
 	}
 }
 
-void _TiRSITimer (void) {
+void __atribute__((interrupt, no_auto_psv)) _TiRSITimer(void) {
 //Timer Interrupt Service Routine
-//@16MHz (Tinst = 250nS), 1ms/Tinst = 4000tics 2^16-4000 = 0xF060
+//@16MHz (Tinst = 250nS), 0.1ms/Tinst = 400tics 2^16-400 = 0xFE70
 
-	TCNT1H = 0xF0;	//Reset Timer
-	TCNT1L = 0x60;	//Reset timer
+	TCNT1H = 0xFE;	//Reset Timer
+	TCNT1L = 0x70;	//Reset timer
 
 	TIFR1 = 0x00; //Clear interrupt flag
-	h_Tics++;	//Increase interrupt counter
+	tics++;	//Increase interrupt counter
 
-	if (h_Tics>=TI_MAXTICS) {
+	if (tics>=MAXTICS) {
 	    //We reset them before they overflow (every 30s aprox)
-	    for (counter = 0; counter < TI_NUMTIMERS; counter++){
-	        if (s_Timers[counter].b_busy == TI_TRUE){
-	            s_Timers[counter].h_initialTics -= h_Tics;
+	    for (counter = 0; counter < NUMTIMERS; counter++){
+	        if (timers[counter].busy == TRUE){
+	            timers[counter].initialTics -= tics;
 	        }
 	    }
-	    h_Tics=0;
+	    tics=0;
 	}
 
 }
+
 void TiResetTics(char Handle) {
 //Pre: 0<Handle<MAXTIMERS.
 //Post: Writes in the tics of the Handle timer the universal tics of the system.
-	s_Timers[Handle].h_initialTics=h_Tics;
+	timers[Handle].initialTics=tics;
 }
 
 int TiGetTics(char Handle) {
@@ -78,25 +74,26 @@ int TiGetTics(char Handle) {
 //Post: Returns the number of tics from the last TiResetTics for the Handle timer.
 
 	volatile unsigned int actual;
-	actual=h_Tics;
-	return (actual-(s_Timers[Handle].h_initialTics));
+	actual=tics;
+	return (actual-(timers[Handle].initialTics));
 
 }
+
 char TiGetTimer(void) {
 //Pre: There are free timers.
 //Post: Returns the Handler of a timer and marks it as busy.
 //Post:	If there are not free timers left, returns a -1.
 	counter=0;
-	while (s_Timers[counter].b_busy==TI_TRUE) {
+	while (timers[counter].busy==TRUE) {
 		counter++;
-		if (counter == TI_NUMTIMERS) return -1;
+		if (counter == NUMTIMERS) return -1;
 	}
-	s_Timers[counter].b_busy=TI_TRUE;
+	timers[counter].busy=TRUE;
 	return (counter);
 }
 
 void TiFreeTimer (char Handle) {
 //Pre: 0<Handle<MAXTIMERS.
 //Post: The Handle timer is marked as free.
-	s_Timers[Handle].b_busy=TI_FALSE;
+	timers[Handle].busy=FALSE;
 }

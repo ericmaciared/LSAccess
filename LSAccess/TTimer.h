@@ -16,11 +16,16 @@ extern "C" {
 
 #include "arduino.h"
 
+#define NUMTIMERS 25
+#define MAXTICS 30000
+#define FALSE 0
+#define TRUE 1
+
 //------------------------ FUNCTIONS ----------------------
 
 void initTimer(void);
 //Pre: --
-//Post: Initializes the timer0 to interrupt each 1ms.
+//Post: Initializes the timer0 to interrupt each 0.1ms.
 
 void TiResetTics(char Handle);
 //Pre: 0<Handle<MAXTIMERS.
