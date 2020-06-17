@@ -1,76 +1,70 @@
-/*//---------------------------------------------------------
-// @File: TTimer*
+//---------------------------------------------------------
+// @File: TSpeaker*
 // @Purpose:
 // @Author: eric.macia
-//          guillermo.sabate
-// @Data: 05/05/2020
+// @Data: 03/05/2020
 //---------------------------------------------------------
 
 //------------------------ INCLUDES -----------------------
-#include "TDoorPWM.h"
-#include <arduino.h>
 
-//------------------------ DEFINES ------------------------
-#define TIME_PWM 500
+#include "TSpeaker.h"
 
 //------------------------ VARIABLES ----------------------
-static char state;
+
 static char timer;
-static char period;
+static char beeps;
+static char pwmCounter;
 
 //------------------------ FUNCTIONS ----------------------
 
-void initTSpeakerPWM(void) {
-  SET_AUDIO_DIR; //Set SPEAKER pin as OUTPUT
-  AUDIO_OFF; //Initialize SPEAKER to LOW
-  state = 0;
-  period = 1;
+void initTSpeaker(void) {
+  pinMode(SPEAKER, OUTPUT); //Set SPEAKER pin as OUTPUT
+  digitalWrite(SPEAKER, LOW); //Initialize SPEAKER to LOW
+  beeps = 5;
+  pwmCounter = 0;
   timer = TiGetTimer();
+  TiResetTics(timer);
 }
 
-char getAudioPeriod(void){
-    return period;
+void SpAddBeeps(char numBeeps){
+  beeps += numBeeps;
 }
 
-void setAudioPeriod(char newPeriod){
-    period= newPeriod;
-
-}
-
-char getAudioStatus(void){
-    return state != 2;
-}
-
-void motorTSpeakerPWM(void){
-	static char state = 0;
-	switch(state){
-		case 0:
-			if (tHigh != 0) state = 1;
-			break;
-		case 1:
-			if (TiGetTics(timer) >= tHigh){
-        AUDIO_OFF;
-				state = 2;
-			}
-			break;
-    case 2:
-      if (TiGetTics(timer) >= TIME_PWM) {
+void motorTSpeaker(void){
+  static char state = 0;
+  switch (state){
+    case 0:
+      if (beeps != 0) {
         TiResetTics(timer);
-          AUDIO_ON;
+        pwmCounter = 0;
+        digitalWrite(SPEAKER, HIGH);
+        state = 1;
       }
       break;
-	}
-}
-
-char changeAudioStatus(){
-    //Post: Changes the audio status.
-    if (state == 2){
-        //I am quiet, speak!
-        state = 0;
-    }else{
-        //I am speaking, shut up!
+    case 1:
+      if (TiGetTics(timer) >= T_HIGH && pwmCounter != 100) {
+        digitalWrite(SPEAKER, LOW);
         state = 2;
-        AUDIO_OFF();
-    }
-    return state == 0;
-}*/
+      }
+      else if (pwmCounter == 100) {
+        digitalWrite(SPEAKER, LOW);
+        TiResetTics(timer);
+        state = 3;
+      }
+      break;
+    case 2:
+      if (TiGetTics(timer) >= T_PWM) {
+        pwmCounter++;
+        digitalWrite(SPEAKER, HIGH);
+        TiResetTics(timer);
+        state = 1;
+      }
+      break;
+    case 3:
+      if (TiGetTics(timer) >= T_BEEP) {
+        beeps--;
+        state = 0;
+      }
+      break;
+  }
+}
