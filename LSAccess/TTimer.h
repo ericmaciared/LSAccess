@@ -8,6 +8,8 @@
 #ifndef _TTIMER_H_
 #define	_TTIMER_H_
 
+#include <Arduino.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,8 +20,6 @@ extern "C" {
 #define TRUE 1
 
 //------------------------ INCLUDES -----------------------
-
-#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
 

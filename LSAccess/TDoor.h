@@ -16,10 +16,14 @@
 
 //------------------------ INCLUDES -----------------------
 
+#include <Arduino.h>
 #include "TTimer.h"
-#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void initTDoor(void);
 //Pre: timer ADT has been initialized.
@@ -30,5 +34,9 @@ void motorTDoor(void);
 void DoOpenDoor(void);
 //Pre: --
 //Post: Opens door for 3 seconds.
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif

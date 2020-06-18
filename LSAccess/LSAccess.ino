@@ -1,3 +1,4 @@
+
 /*
  * File:   main.c
  * Author: Eric Macià (eric.macia)
@@ -7,11 +8,22 @@
  */
 
 //includes
-#include "main.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "TTimer.h"
+#include "TDoor.h"
+#include "TSpeaker.h"
 
 void setup(){
+  Serial.begin(9600);
+  initTimer();
+  initTDoor();
+  initTSpeaker();
 }
 
 void loop(){
-    main();
+  motorTDoor();
+  motorTSpeaker();
 }

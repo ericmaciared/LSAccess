@@ -8,16 +8,21 @@
 #ifndef _TSPEAKER_H_
 #define _TSPEAKER_H_
 
+#include <Arduino.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SPEAKER 23      //Speaker OUTPUT PIN
 
-#define T_BEEP 1500 //150 mS
-#define T_PWM 15 //1.5 mS    770Hz Frequency
-#define T_HIGH 7  //0.7 mS
+#define T_BEEP 15000 //150 mS
+#define T_PWM 30 //1.5 mS    770Hz Frequency
+#define T_HIGH 20  //0.7 mS
 
 //------------------------ INCLUDES -----------------------
 
 #include "TTimer.h"
-#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
 
@@ -30,5 +35,9 @@ void motorTSpeaker(void);
 void SpAddBeeps(char numBeeps);
 //Pre: --
 //Post: Sets number of beeps to sound in speaker.
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif

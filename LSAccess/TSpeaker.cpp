@@ -24,6 +24,8 @@ void initTSpeaker(void) {
   pwmCounter = 0;
   timer = TiGetTimer();
   TiResetTics(timer);
+  Serial.println("Javi comeme el nabo");
+
 }
 
 void SpAddBeeps(char numBeeps){

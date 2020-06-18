@@ -5,7 +5,7 @@
  *
  * Created on 24/04/2020
  */
-
+/*
 //C INCLUDES
 #include <string.h>
 #include <stdlib.h>
@@ -14,6 +14,7 @@
 //LOCAL INCLUDES
 #include "TTimer.h"
 #include "TDoor.h"
+#include "TSpeaker.h"
 /*
  *
  */
@@ -43,7 +44,7 @@ _CONFIG1(		JTAGEN_OFF                              // JTAG                      
 );*/
 
 
-
+/*
 void initCPU(){
     //CLKDIV=0x0000;          // clock division of the timer and CPU by 1.
     //OSCCON=0x0020;
@@ -54,9 +55,10 @@ int main(void){
     initCPU();
     initTimer();
     initTDoor();
+    initTSpeaker();
 
     while(1){
         motorTDoor();
-
+        motorTSpeaker();
     }
-}
+}*/
