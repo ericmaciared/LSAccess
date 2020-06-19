@@ -114,7 +114,7 @@ void AuAddChar(char input);
 //Post: Sends received char to Authentication module.
 
 //Interface 15 AUTHENTICATION -> EUSART
-void SioStatisticsBuffer(char* input);
+void SioPutsCooperatiu(char* input);
 //Pre: The reference to the char *s is a const char or I can guaranty that
 //     it won't be overwritten until it has been send.
 //Post: Add *s at the queue of chains to send...

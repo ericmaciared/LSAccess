@@ -8,12 +8,6 @@
 #ifndef _TTIMER_H_
 #define	_TTIMER_H_
 
-#include <Arduino.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define NUMTIMERS 25
 #define MAXTICS 30000
 #define FALSE 0
@@ -21,7 +15,13 @@ extern "C" {
 
 //------------------------ INCLUDES -----------------------
 
+#include <Arduino.h>
+
 //------------------------ FUNCTIONS ----------------------
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void initTimer(void);
 //Pre: --
@@ -45,7 +45,6 @@ void TiFreeTimer (char Handle);
 //Pre: 0<Handle<MAXTIMERS.
 //Post: The Handle timer is marked as free.
 
-void  _TiRSITimer (void);
 
 #ifdef __cplusplus
 } // extern "C"

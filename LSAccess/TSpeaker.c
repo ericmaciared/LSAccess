@@ -24,8 +24,6 @@ void initTSpeaker(void) {
   pwmCounter = 0;
   timer = TiGetTimer();
   TiResetTics(timer);
-  Serial.println("Javi comeme el nabo");
-
 }
 
 void SpAddBeeps(char numBeeps){
@@ -44,17 +42,19 @@ void motorTSpeaker(void){
       }
       break;
     case 1:
-      if (TiGetTics(timer) >= T_HIGH && pwmCounter != 100) {
+
+      if (TiGetTics(timer) >= T_HIGH && pwmCounter != 10) {
         digitalWrite(SPEAKER, LOW);
         state = 2;
       }
-      else if (pwmCounter == 100) {
+      else if (pwmCounter == 10) {
         digitalWrite(SPEAKER, LOW);
         TiResetTics(timer);
         state = 3;
       }
       break;
     case 2:
+
       if (TiGetTics(timer) >= T_PWM) {
         pwmCounter++;
         digitalWrite(SPEAKER, HIGH);
@@ -63,6 +63,7 @@ void motorTSpeaker(void){
       }
       break;
     case 3:
+
       if (TiGetTics(timer) >= T_BEEP) {
         beeps--;
         state = 0;

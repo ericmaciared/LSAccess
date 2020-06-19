@@ -16,9 +16,9 @@ extern "C" {
 
 #define SPEAKER 23      //Speaker OUTPUT PIN
 
-#define T_BEEP 15000 //150 mS
-#define T_PWM 30 //1.5 mS    770Hz Frequency
-#define T_HIGH 20  //0.7 mS
+#define T_BEEP 250 //250 mS
+#define T_PWM 2 //2 mS
+#define T_HIGH 1  //1 mS
 
 //------------------------ INCLUDES -----------------------
 
