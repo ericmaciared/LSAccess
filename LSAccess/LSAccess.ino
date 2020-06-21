@@ -1,6 +1,6 @@
 
 /*
- * File:   main.c
+ * File:   LSAccess.ino
  * Author: Eric Macià (eric.macia)
  *         Guillermo Sabaté (guillermo.sabate)
  *
@@ -15,15 +15,18 @@
 #include "TTimer.h"
 #include "TDoor.h"
 #include "TSpeaker.h"
+#include "TEUSART.h"
 
 void setup(){
-  Serial.begin(9600);
   initTimer();
   initTDoor();
   initTSpeaker();
+  initTEUSART();
+  SioPutsCooperative("Booting...");
 }
 
 void loop(){
   motorTDoor();
   motorTSpeaker();
+  motorTEUSART();
 }

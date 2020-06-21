@@ -16,7 +16,7 @@
 #define ROW2 6
 #define ROW3 7
 
-#define T_PRESS 5000 //0.5 S
+#define T_PRESS 500 //0.5 S
 
 //------------------------ INCLUDES -----------------------
 
