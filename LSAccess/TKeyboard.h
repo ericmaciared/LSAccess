@@ -16,14 +16,19 @@
 #define ROW2 6
 #define ROW3 7
 
+#define T_DEBOUNCE 20 //20 mS
 #define T_PRESS 500 //0.5 S
 
 //------------------------ INCLUDES -----------------------
 
+#include <Arduino.h>
 #include "TTimer.h"
-#include "arduino.h"
 
 //------------------------ FUNCTIONS ----------------------
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char KeyCharAvailable(void);
 //Pre: --
@@ -38,5 +43,9 @@ void initTKeyboard(void);
 //Post: asks for a timer and sets initial variables.
 
 void motorTKeyboard(void);
+
+#ifdef __cplusplus
+} //extern C
+#endif
 
 #endif
