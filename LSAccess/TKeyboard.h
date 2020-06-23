@@ -8,16 +8,17 @@
 #ifndef _TKEYBOARD_H_
 #define _TKEYBOARD_H_
 
-#define COL0 1
-#define COL1 2
-#define COL2 3
-#define ROW0 4
-#define ROW1 5
-#define ROW2 6
-#define ROW3 7
+#define COL0 24
+#define COL1 26
+#define COL2 28
+#define ROW0 30
+#define ROW1 32
+#define ROW2 34
+#define ROW3 36
 
 #define T_DEBOUNCE 20 //20 mS
-#define T_PRESS 500 //0.5 S
+#define TRUE 1
+#define FALSE 0
 
 //------------------------ INCLUDES -----------------------
 

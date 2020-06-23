@@ -105,6 +105,14 @@ void AuIdle(void);
 //Pre: --
 //Post: The system moves to an idle state.
 
+void AuLogin(void);
+//Pre: --
+//Post: Sets process state to Login.
+
+void AuRegister(void);
+//Pre: --
+//Post: Sets process state to Register.
+
 void AuReset(void);
 //Pre: --
 //Post: The system resets.
@@ -112,6 +120,14 @@ void AuReset(void);
 void AuAddChar(char input);
 //Pre: --
 //Post: Sends received char to Authentication module.
+
+void AuSwitchChar(char input);
+//Pre: --
+//Post: Switches previous char with new char.
+
+char AuState(void);
+//Pre: --
+//Post: 1 if state is idle.
 
 //Interface 15 AUTHENTICATION -> EUSART
 void SioPutsCooperatiu(char* input);

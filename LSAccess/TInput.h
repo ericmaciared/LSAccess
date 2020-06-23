@@ -1,18 +1,12 @@
 //---------------------------------------------------------
-// @File: TSpeaker*
+// @File: TInput*
 // @Purpose:
 // @Author: eric.macia
 // @Data: 03/05/2020
 //---------------------------------------------------------
 
-#ifndef _TSPEAKER_H_
-#define _TSPEAKER_H_
-
-#define SPEAKER 23      //Speaker OUTPUT PIN
-
-#define T_BEEP 250 //250 mS
-#define T_PWM 2 //2 mS
-#define T_HIGH 1  //1 mS
+#ifndef _TINPUT_H_
+#define _TINPUT_H_
 
 //------------------------ INCLUDES -----------------------
 
@@ -25,15 +19,11 @@
 extern "C" {
 #endif
 
-void initTSpeaker(void);
+void initTInput(void);
 //Pre: timer ADT has been initialized.
-//Post: asks for a timer and sets the PWM to the minimum DC.
+//Post: initializes TInput ADT
 
-void motorTSpeaker(void);
-
-void SpAddBeeps(char numBeeps);
-//Pre: --
-//Post: Sets number of beeps to sound in speaker.
+void motorTInput(void);
 
 #ifdef __cplusplus
 } // extern "C"

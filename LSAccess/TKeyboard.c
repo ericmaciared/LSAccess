@@ -25,6 +25,9 @@ void initTKeyboard(void) {
   pinMode(ROW2, OUTPUT);
   pinMode(ROW3, OUTPUT);
   digitalWrite(ROW0, HIGH); //Initialize ROW0 to HIGH
+  digitalWrite(ROW1, LOW);  //Initialize ROW1 to LOW
+  digitalWrite(ROW2, LOW);  //Initialize ROW2 to LOW
+  digitalWrite(ROW3, LOW);  //Initialize ROW3 to LOW
   row = 0;
   key = -1;
   timer = TiGetTimer();
@@ -72,7 +75,7 @@ void motorTKeyboard(void){
       break;
     case 4:
       if (TiGetTics(timer) >= T_DEBOUNCE) {
-        //Send value
+        key = -1;
         state = 0;
       }
       break;
@@ -80,9 +83,9 @@ void motorTKeyboard(void){
 }
 
 char KeyCharAvailable(void){
-  return key != -1;
+   return ((key != -1) ? FALSE : TRUE);
 }
 
 char KeyGetChar(void){
-  
+  return key;
 }
