@@ -8,13 +8,13 @@
 #ifndef _TKEYBOARD_H_
 #define _TKEYBOARD_H_
 
-#define COL0 24
-#define COL1 26
-#define COL2 28
-#define ROW0 30
-#define ROW1 32
-#define ROW2 34
-#define ROW3 36
+#define COL1 24 // INPUT
+#define ROW0 26 // OUTPUT
+#define COL0 28 // INPUT 
+#define ROW3 30 // OUTPUT
+#define COL2 32 // INPUT
+#define ROW2 34 // OUTPUT
+#define ROW1 36 // OUTPUT
 
 #define T_DEBOUNCE 20 //20 mS
 #define TRUE 1
