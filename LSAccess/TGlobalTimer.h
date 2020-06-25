@@ -8,7 +8,7 @@
 #ifndef _TGLOBALTIMER_H_
 #define	_TGLOBALTIMER_H_
 
-#define TMIN 60000
+#define T_MIN 60000
 #define ONEHOUR 60
 #define ONEDAY 24
 #define TRUE 1
@@ -17,6 +17,7 @@
 //------------------------ INCLUDES -----------------------
 
 #include <Arduino.h>
+#include "TTimer.h"
 
 //------------------------ FUNCTIONS ----------------------
 
