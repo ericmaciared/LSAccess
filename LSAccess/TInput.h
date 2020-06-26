@@ -1,4 +1,4 @@
-//---------------------------------------------------------
+/*//---------------------------------------------------------
 // @File: TInput*
 // @Purpose:
 // @Author: eric.macia
@@ -39,4 +39,4 @@ unsigned char InItoa(char key);
 } // extern "C"
 #endif
 
-#endif
+#endif*/

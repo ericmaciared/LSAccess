@@ -17,14 +17,18 @@
 #include "TSpeaker.h"
 #include "TEUSART.h"
 #include "TKeyboard.h"
+//#include "TInput.h"
+#include "TRFID.h"
 
 void setup(){
   initTimer();
   initTDoor();
   initTSpeaker();
   initTEUSART();
-  initTKeyboard(); 
   SioPutsCooperative("Booting...");
+  initTKeyboard();
+  //initTInput();
+  initTRFID();
 }
 
 void loop(){
@@ -32,4 +36,6 @@ void loop(){
   motorTSpeaker();
   motorTEUSART();
   motorTKeyboard();
+  //motorTInput();
+  motorTRFID();
 }

@@ -103,11 +103,11 @@
 #define     RESERVED33            0x3E
 #define     RESERVED34            0x3F
 
-#define SDA 9
-#define SCK 52
-#define MOSI 51
-#define MISO 50
-#define RST 8
+#define PIN_SDA 9
+#define PIN_SCK 52
+#define PIN_MOSI 51
+#define PIN_MISO 50
+#define PIN_RST 8
 
 //------------------------ INCLUDES -----------------------
 
@@ -123,7 +123,7 @@ extern "C" {
   //Pre: --
   //Post: sets initial ports and sets initial variables.
 
-  unsigned char RFIDRead(unsigned char address)
+  unsigned char RFIDRead(unsigned char address);
 
   void RFIDWrite(unsigned char address, unsigned char value);
 

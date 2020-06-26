@@ -14,19 +14,26 @@
 //------------------------ VARIABLES ----------------------
 
 static unsigned char i, ucAddr;
+static char state;
 static unsigned char ucResult = 0;
+static unsigned char UID[16];
+static char tagType;
 
 //------------------------ FUNCTIONS ----------------------
 
-void initTRFID(void){
-  pinMode(SDA, OUTPUT);
-  pinMode(SCK, OUTPUT);
-  pinMode(MOSI, OUTPUT);
-  pinMode(MISO, INPUT);
-  pinMode(RST, OUTPUT);
+void initTRFID(void) {
+  state = 0;
 
-  digitalWrite(SDA, HIGH);
-  digitalWrite(RST, 1);
+  Serial.println("Starting RFID");
+
+  pinMode(PIN_SDA, OUTPUT);
+  pinMode(PIN_SCK, OUTPUT);
+  pinMode(PIN_MOSI, OUTPUT);
+  pinMode(PIN_MISO, INPUT);
+  pinMode(PIN_RST, OUTPUT);
+
+  digitalWrite(PIN_SDA, HIGH);
+  digitalWrite(PIN_RST, 1);
 
   RFIDReset();
   RFIDWrite(TMODEREG, 0x8D);
@@ -36,100 +43,126 @@ void initTRFID(void){
   RFIDWrite(TXAUTOREG, 0x40);
   RFIDWrite(MODEREG, 0x3D);
 
-  RFIDAntennaOff() ;
+  RFIDAntennaOff();
   RFIDAntennaOn();
 }
 
+void motorTRFID() {
+  switch (state) {
+    case 0:
+      if (RFIDIsCard(&tagType)) {
+        state = 1;
+      }
+      break;
+    case 1:
+      if (RFIDReadCardSerial(UID)) {
+        Serial.print ("UID:");
+        for (i = 0; i < 5; i++) {
+          Serial.print (UID[i], HEX);
+        }
+        Serial.println();
+        RFIDHalt();
+        state = 0;
+      }
+      else {
+        RFIDHalt();
+        state = 0;
+      }
+      break;
+  }
+}
+
+
 unsigned char RFIDRead(unsigned char address) {
   ucResult = 0;
-  digitalWrite(SCK, LOW);
-  digitalWrite(SDA, LOW);
-  ucAddr = ((Address<<1)&0x7E)|0x80;
+  digitalWrite(PIN_SCK, LOW);
+  digitalWrite(PIN_SDA, LOW);
+  ucAddr = ((address << 1) & 0x7E) | 0x80;
 
   for (i = 8; i > 0; i--) {
-    digitalWrite(MOSI, ((ucAddr&0x80) == 0x80));
-    digitalWrite(SCK, HIGH);
+    digitalWrite(PIN_MOSI, ((ucAddr & 0x80) == 0x80));
+    digitalWrite(PIN_SCK, HIGH);
     ucAddr <<= 1;
-    digitalWrite(SCK, LOW);
+    digitalWrite(PIN_SCK, LOW);
   }
 
   for (i = 8; i > 0; i--) {
-    digitalWrite(SCK, HIGH);
+    digitalWrite(PIN_SCK, HIGH);
     ucResult <<= 1;
-    ucResult|= (char) digitalRead(MISO);
-    digitalWrite(SCK, LOW);
+    ucResult |= (char) digitalRead(PIN_MISO);
+    digitalWrite(PIN_SCK, LOW);
   }
 
-  digitalWrite(SDA, HIGH);
-  digitalWrite(SCK, HIGH);
+  digitalWrite(PIN_SDA, HIGH);
+  digitalWrite(PIN_SCK, HIGH);
   return (char)ucResult;
 }
 
-void RFIDWrite(unsigned char address, unsigned char value){
+void RFIDWrite(unsigned char address, unsigned char value) {
   unsigned char i, ucAddr;
 
-  digitalWrite(SCK, LOW);
+  digitalWrite(PIN_SCK, LOW);
 
-  digitalWrite(SDA, LOW);
-  ucAddr = ((address<<1)&0x7E);
+  digitalWrite(PIN_SDA, LOW);
+  ucAddr = ((address << 1) & 0x7E);
   for (i = 8; i > 0; i--) {
-    digitalWrite(MOSI, ((ucAddr&0x80) == 0x80));
-    digitalWrite(SCK, HIGH);
+    digitalWrite(PIN_MOSI, ((ucAddr & 0x80) == 0x80));
+    digitalWrite(PIN_SCK, HIGH);
     ucAddr <<= 1;
-    digitalWrite(SCK, LOW);
+    digitalWrite(PIN_SCK, LOW);
   }
 
-  for (i = 8; i > 0; i--){
+  for (i = 8; i > 0; i--) {
     //output_bit (MFRC522_SI, ( (value&0x80) == 0x80));
-    digitalWrite(MOSI, ((value&0x80) == 0x80));
-    digitalWrite(SCK, HIGH);
+    digitalWrite(PIN_MOSI, ((value & 0x80) == 0x80));
+    digitalWrite(PIN_SCK, HIGH);
     value <<= 1;
-    digitalWrite(SCK, LOW);
+    digitalWrite(PIN_SCK, LOW);
   }
 
-  digitalWrite(SDA, HIGH);
-  digitalWrite(SCK, HIGH);
+  digitalWrite(PIN_SDA, HIGH);
+  digitalWrite(PIN_SCK, HIGH);
 }
 
-void RFIDAntennaOn(void){
+void RFIDAntennaOn(void) {
   unsigned char stt;
-  stt = RFIDRead(XCONTROLREG);
+  stt = RFIDRead(TXCONTROLREG);
   RFIDSetBit(TXCONTROLREG, 0x03);
 }
 
-void RFIDAntennaOff(void){
+void RFIDAntennaOff(void) {
   RFIDClearBit(TXCONTROLREG, 0x03);
 }
 
-void RFIDReset(void){
-  digitalWrite(RST, HIGH);
+void RFIDReset(void) {
+  digitalWrite(PIN_RST, HIGH);
   delayMicroseconds(1);
-  digitalWrite(RST, LOW);
+  digitalWrite(PIN_RST, LOW);
   delayMicroseconds(1);
-  digitalWrite(RST, HIGH);
+  digitalWrite(PIN_RST, HIGH);
   delayMicroseconds(1);
   RFIDWrite(COMMANDREG, PCD_RESETPHASE);
 }
 
-char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsigned *backLen){
-  char _status = MI_ERR;
-  char irqEn = 0x00;
-  char waitIRq = 0x00;
-  char lastBits;
-  char n;
-  unsigned i;
+char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsigned *backLen) {
+  static char _status = MI_ERR;
+  static char irqEn = 0x00;
+  static char waitIRq = 0x00;
+  static char lastBits;
+  static char n;
+  static unsigned i;
 
-  switch (command){
+  switch (command) {
     case PCD_AUTHENT:
-    irqEn = 0x12;
-    waitIRq = 0x10;
-    break;
+      irqEn = 0x12;
+      waitIRq = 0x10;
+      break;
     case PCD_TRANSCEIVE:
-    irqEn = 0x77;
-    waitIRq = 0x30;
-    break;
+      irqEn = 0x77;
+      waitIRq = 0x30;
+      break;
     default:
-    break;
+      break;
   }
 
   RFIDWrite(COMMIENREG, irqEn | 0x80);
@@ -137,7 +170,7 @@ char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsi
   RFIDSetBit(FIFOLEVELREG, 0x80);
   RFIDWrite(COMMANDREG, PCD_IDLE);
 
-  for ( i=0; i < sendLen; i++ ){
+  for ( i = 0; i < sendLen; i++ ) {
     RFIDWrite(FIFODATAREG, sendData[i]);
   }
 
@@ -145,28 +178,28 @@ char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsi
   if (command == PCD_TRANSCEIVE) RFIDSetBit(BITFRAMINGREG, 0x80);
 
   i = 0xFFFF;
-  do{
+  do {
     n = RFIDRead(COMMIRQREG);
     i--;
   }
   while (i && !(n & 0x01) && !(n & waitIRq));
   RFIDClearBit(BITFRAMINGREG, 0x80);
 
-  if (i != 0){
-    if( !(RFIDRead(ERRORREG) & 0x1B)){
+  if (i != 0) {
+    if ( !(RFIDRead(ERRORREG) & 0x1B)) {
       _status = MI_OK;
-      if (n & irqEn & 0x01){
+      if (n & irqEn & 0x01) {
         _status = MI_NOTAGERR;
       }
-      if (command == PCD_TRANSCEIVE){
+      if (command == PCD_TRANSCEIVE) {
         n = RFIDRead(FIFOLEVELREG);
         lastBits = RFIDRead(CONTROLREG) & 0x07;
-        if (lastBits) *backLen = (n-1) * 8 + lastBits;
+        if (lastBits) *backLen = (n - 1) * 8 + lastBits;
         else *backLen = n * 8;
         if (n == 0) n = 1;
         if (n > 16) n = 16;
 
-        for (i=0; i < n; i++) {
+        for (i = 0; i < n; i++) {
           backData[i] = RFIDRead( FIFODATAREG );
         }
         backData[i] = 0;
@@ -177,7 +210,7 @@ char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsi
   return _status;
 }
 
-char RFIDRequest(char reqMode, char *TagType){
+char RFIDRequest(char reqMode, char *TagType) {
   char _status;
   unsigned backBits;
   RFIDWrite(BITFRAMINGREG, 0x07);
@@ -187,12 +220,12 @@ char RFIDRequest(char reqMode, char *TagType){
   return _status;
 }
 
-void RFIDCRC(char *dataIn, char length, char *dataOut){
+void RFIDCRC(char *dataIn, char length, char *dataOut) {
   char i, n;
   RFIDClearBit(DIVIRQREG, 0x04);
   RFIDSetBit(FIFOLEVELREG, 0x80);
 
-  for ( i = 0; i < length; i++ ){
+  for ( i = 0; i < length; i++ ) {
     RFIDWrite(FIFODATAREG, *dataIn++);
   }
 
@@ -204,13 +237,13 @@ void RFIDCRC(char *dataIn, char length, char *dataOut){
     n = RFIDRead(DIVIRQREG);
     i--;
   }
-  while(i && !(n & 0x04));
+  while (i && !(n & 0x04));
 
   dataOut[0] = RFIDRead(CRCRESULTREGL);
   dataOut[1] = RFIDRead(CRCRESULTREGM);
 }
 
-char RFIDSelectTag(char *serNum){
+char RFIDSelectTag(char *serNum) {
   char i;
   char _status;
   char size;
@@ -220,7 +253,7 @@ char RFIDSelectTag(char *serNum){
   buffer[0] = PICC_SElECTTAG;
   buffer[1] = 0x70;
 
-  for ( i=2; i < 7; i++ ){
+  for ( i = 2; i < 7; i++ ) {
     buffer[i] = *serNum++;
   }
 
@@ -232,7 +265,7 @@ char RFIDSelectTag(char *serNum){
   return size;
 }
 
-void RFIDHalt(void){
+void RFIDHalt(void) {
   unsigned unLen;
   char buff[4];
 
@@ -244,7 +277,7 @@ void RFIDHalt(void){
   RFIDClearBit(STATUS2REG, 0x08);
 }
 
-char RFIDAntiColl(char *serNum){
+char RFIDAntiColl(char *serNum) {
   char _status;
   char i;
   char serNumCheck = 0;
@@ -255,8 +288,8 @@ char RFIDAntiColl(char *serNum){
   serNum[1] = 0x20;
   RFIDClearBit(STATUS2REG, 0x08);
   _status = RFIDToCard(PCD_TRANSCEIVE, serNum, 2, serNum, &unLen);
-  if (_status == MI_OK){
-    for (i=0; i < 4; i++){
+  if (_status == MI_OK) {
+    for (i = 0; i < 4; i++) {
       serNumCheck ^= serNum[i];
     }
     if (serNumCheck != serNum[4]) _status = MI_ERR;
@@ -264,12 +297,12 @@ char RFIDAntiColl(char *serNum){
   return _status;
 }
 
-char RFIDIsCard(char *TagType){
+char RFIDIsCard(char *TagType) {
   if (RFIDRequest(PICC_REQIDL, TagType) == MI_OK) return 1;
   else return 0;
 }
 
-char RFIDReadCardSerial(char *str){
+char RFIDReadCardSerial(char *str) {
   char _status;
   _status = RFIDAntiColl(str);
   str[5] = 0;
@@ -277,14 +310,14 @@ char RFIDReadCardSerial(char *str){
   else return 0;
 }
 
-static void RFIDClearBit(char addr, char mask){
+static void RFIDClearBit(char addr, char mask) {
   unsigned char tmp = 0x0;
   tmp = RFIDRead(addr);
-  RFIDWrite(addr, tmp&~mask);
+  RFIDWrite(addr, tmp & ~mask);
 }
 
-static void RFIDSetBit(char addr, char mask){
-  unsigned char tmp =0x0;
-  tmp = MFRC522_Rd(addr);
-  MFRC522_Wr(addr, tmp|mask);
+static void RFIDSetBit(char addr, char mask) {
+  unsigned char tmp = 0x0;
+  tmp = RFIDRead(addr);
+  RFIDWrite(addr, tmp | mask);
 }
