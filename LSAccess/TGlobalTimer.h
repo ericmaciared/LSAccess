@@ -26,13 +26,21 @@ extern "C" {
 
 void motorTGlobalTimer(void);
 
-char * getTime(void);
-//Pre: initTGlobalTimer.
-//Post: Returns pointer to the time array with hour and minute
-
 void initTGlobalTimer(void);
 //Pre: timer ADT has been initialized.
 //Post: asks for a timer and sets initial variables.
+
+void GlSetTime(char hour, char min);
+//Pre: --
+//Post: Sets global time to given values
+
+char GlGetHour(void);
+//Pre: --
+//Post: Returns global hour.
+
+char GlGetMin(void);
+//Pre: --
+//Post: Return global mins.
 
 #ifdef __cplusplus
 } // extern "C"
