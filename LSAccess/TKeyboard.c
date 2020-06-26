@@ -34,56 +34,56 @@ void initTKeyboard(void) {
 }
 
 void motorTKeyboard(void){
-	static char state = 0;
-	switch(state){
-		case 0:
-      if (!digitalRead(COL0) || !digitalRead(COL1) || !digitalRead(COL2)) {
-        TiResetTics(timer);
-        state = 1;
-      }
-      else{
-        row = (++row > 3) ? 0 : row;
-        digitalWrite(ROW0, (row == 0) ? LOW : HIGH);
-        digitalWrite(ROW1, (row == 1) ? LOW : HIGH);
-        digitalWrite(ROW2, (row == 2) ? LOW : HIGH);
-        digitalWrite(ROW3, (row == 3) ? LOW : HIGH);
-      }
-			break;
+  static char state = 0;
+  switch(state){
+    case 0:
+    if (!digitalRead(COL0) || !digitalRead(COL1) || !digitalRead(COL2)) {
+      TiResetTics(timer);
+      state = 1;
+    }
+    else{
+      row = (++row > 3) ? 0 : row;
+      digitalWrite(ROW0, (row == 0) ? LOW : HIGH);
+      digitalWrite(ROW1, (row == 1) ? LOW : HIGH);
+      digitalWrite(ROW2, (row == 2) ? LOW : HIGH);
+      digitalWrite(ROW3, (row == 3) ? LOW : HIGH);
+    }
+    break;
     case 1:
-      if (TiGetTics(timer) >= T_DEBOUNCE) state = 2;
-      break;
+    if (TiGetTics(timer) >= T_DEBOUNCE) state = 2;
+    break;
     case 2:
-      if (!digitalRead(COL0) && digitalRead(COL1) && digitalRead(COL2)) {
-        key = 3*row+1;
-        state = 3;
-      }
-      else if (digitalRead(COL0) && !digitalRead(COL1) && digitalRead(COL2)) {
-        key = 3*row+2;
-        state = 3;
-      }
-      else if (digitalRead(COL0) && digitalRead(COL1) && !digitalRead(COL2)) {
-        key = 3*row+3;
-        state = 3;
-      }
-      else state = 0;
-      break;
+    if (!digitalRead(COL0) && digitalRead(COL1) && digitalRead(COL2)) {
+      key = 3*row+1;
+      state = 3;
+    }
+    else if (digitalRead(COL0) && !digitalRead(COL1) && digitalRead(COL2)) {
+      key = 3*row+2;
+      state = 3;
+    }
+    else if (digitalRead(COL0) && digitalRead(COL1) && !digitalRead(COL2)) {
+      key = 3*row+3;
+      state = 3;
+    }
+    else state = 0;
+    break;
     case 3:
-      if (digitalRead(COL0) && digitalRead(COL1) && digitalRead(COL2)) {
-        TiResetTics(timer);
-        state = 4;
-      }
-      break;
+    if (digitalRead(COL0) && digitalRead(COL1) && digitalRead(COL2)) {
+      TiResetTics(timer);
+      state = 4;
+    }
+    break;
     case 4:
-      if (TiGetTics(timer) >= T_DEBOUNCE) {
-        key = -1;
-        state = 0;
-      }
-      break;
-	}
+    if (TiGetTics(timer) >= T_DEBOUNCE) {
+      key = -1;
+      state = 0;
+    }
+    break;
+  }
 }
 
 char KeyCharAvailable(void){
-   return ((key != -1) ? FALSE : TRUE);
+  return ((key != -1) ? FALSE : TRUE);
 }
 
 char KeyGetChar(void){

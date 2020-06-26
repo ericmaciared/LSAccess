@@ -20,7 +20,7 @@ static char pwmCounter;
 void initTSpeaker(void) {
   pinMode(SPEAKER, OUTPUT); //Set SPEAKER pin as OUTPUT
   digitalWrite(SPEAKER, LOW); //Initialize SPEAKER to LOW
-  beeps = 5;
+  beeps = 3;
   pwmCounter = 0;
   timer = TiGetTimer();
   TiResetTics(timer);

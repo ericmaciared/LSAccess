@@ -8,10 +8,18 @@
 #ifndef _TINPUT_H_
 #define _TINPUT_H_
 
+#define IDLE 1
+
+#define T_PRESS 500  //500 mS
+#define T_IDLE 3000 //3 S
+#define T_RESET 5000 //5 S
+
 //------------------------ INCLUDES -----------------------
 
 #include <Arduino.h>
 #include "TTimer.h"
+#include "TKeyboard.h"
+#include "TEUSART.h"
 
 //------------------------ FUNCTIONS ----------------------
 
@@ -24,6 +32,8 @@ void initTInput(void);
 //Post: initializes TInput ADT
 
 void motorTInput(void);
+
+unsigned char InItoa(char key);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -113,6 +113,14 @@ void AuRegister(void);
 //Pre: --
 //Post: Sets process state to Register.
 
+void AuChangeTime(void);
+//Pre: --
+//Post: Sets process state to Change Time
+
+void AuStatistics(void);
+//Pre: --
+//Post: Starts sending statistics process.
+
 void AuReset(void);
 //Pre: --
 //Post: The system resets.
