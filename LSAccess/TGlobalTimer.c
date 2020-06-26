@@ -28,7 +28,7 @@ void initTGlobalTimer(void) {
 void motorTGlobalTimer(void){
 	switch(state){
     case 0:
-      if (TiGetTics(timer) >= T_MIN) state = 1;
+      if (TiGetTics(timer) >= ONEMINUTE) state = 1;
 			break;
     case 1:
       TiResetTics(timer);
