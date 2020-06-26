@@ -30,7 +30,9 @@ void initTInput(void) {
 void motorTInput(void){
   switch (state){
     case 0:
+      numPress = 0;
       if (KeyCharAvailable() == 1) {
+        numPress++;
         key = KeyGetChar();
         state = 1;
       }
@@ -74,6 +76,7 @@ void motorTInput(void){
     case 4:
       if (TiGetTics(timer) >= T_PRESS) state = 0;
       else if (TiGetTics(timer) < T_PRESS && KeyCharAvailable() == 1) {
+        numPress++;
         key = KeyGetChar();
         state = 5;
       }
@@ -104,5 +107,30 @@ void motorTInput(void){
 }
 
 unsigned char InItoa(char key){
+  unsigned char _key = 0;
 
+  if (key == 11) _key = '0';
+  else if (key == 1) _key = '1';
+  else if (key == 7) {
+    if (numPress % 5 == 1) _key = '7';
+    else if (numPress % 5 == 0) _key = 'S';
+    else _key = 'P' + numPress%5 - 2;
+  }
+  else if (key == 9) {
+    if (numPress % 5 == 1) _key = '9';
+    else if (numPress % 5 == 0) _key = 'Z';
+    else _key = 'W' + numPress%5 - 2;
+  }
+  else if (key == 8) {
+    if (numPress % 4 == 1) _key = '8';
+    else if (numPress % 4 == 0) _key = 'V';
+    else _key = 'T' + numPress%4 - 2;
+  }
+  else {
+    if (numPress % 4 == 1) _key = '0' + key;
+    else if (numPress % 4 == 0) _key = 'A' + 3*(key-2) + 2;
+    else _key = 'A' + 3*(key-2) + numPress % 4 - 2;
+  }
+
+  return _key;
 }

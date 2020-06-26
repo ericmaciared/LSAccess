@@ -18,7 +18,6 @@ static unsigned char ucResult = 0;
 
 //------------------------ FUNCTIONS ----------------------
 
-
 void initTRFID(void){
   pinMode(SDA, OUTPUT);
   pinMode(SCK, OUTPUT);
@@ -110,6 +109,172 @@ void RFIDReset(void){
   digitalWrite(RST, HIGH);
   delayMicroseconds(1);
   RFIDWrite(COMMANDREG, PCD_RESETPHASE);
+}
+
+char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsigned *backLen){
+  char _status = MI_ERR;
+  char irqEn = 0x00;
+  char waitIRq = 0x00;
+  char lastBits;
+  char n;
+  unsigned i;
+
+  switch (command){
+    case PCD_AUTHENT:
+    irqEn = 0x12;
+    waitIRq = 0x10;
+    break;
+    case PCD_TRANSCEIVE:
+    irqEn = 0x77;
+    waitIRq = 0x30;
+    break;
+    default:
+    break;
+  }
+
+  RFIDWrite(COMMIENREG, irqEn | 0x80);
+  RFIDClearBit(COMMIRQREG, 0x80);
+  RFIDSetBit(FIFOLEVELREG, 0x80);
+  RFIDWrite(COMMANDREG, PCD_IDLE);
+
+  for ( i=0; i < sendLen; i++ ){
+    RFIDWrite(FIFODATAREG, sendData[i]);
+  }
+
+  RFIDWrite(COMMANDREG, command);
+  if (command == PCD_TRANSCEIVE) RFIDSetBit(BITFRAMINGREG, 0x80);
+
+  i = 0xFFFF;
+  do{
+    n = RFIDRead(COMMIRQREG);
+    i--;
+  }
+  while (i && !(n & 0x01) && !(n & waitIRq));
+  RFIDClearBit(BITFRAMINGREG, 0x80);
+
+  if (i != 0){
+    if( !(RFIDRead(ERRORREG) & 0x1B)){
+      _status = MI_OK;
+      if (n & irqEn & 0x01){
+        _status = MI_NOTAGERR;
+      }
+      if (command == PCD_TRANSCEIVE){
+        n = RFIDRead(FIFOLEVELREG);
+        lastBits = RFIDRead(CONTROLREG) & 0x07;
+        if (lastBits) *backLen = (n-1) * 8 + lastBits;
+        else *backLen = n * 8;
+        if (n == 0) n = 1;
+        if (n > 16) n = 16;
+
+        for (i=0; i < n; i++) {
+          backData[i] = RFIDRead( FIFODATAREG );
+        }
+        backData[i] = 0;
+      }
+    }
+    else _status = MI_ERR;
+  }
+  return _status;
+}
+
+char RFIDRequest(char reqMode, char *TagType){
+  char _status;
+  unsigned backBits;
+  RFIDWrite(BITFRAMINGREG, 0x07);
+  TagType[0] = reqMode;
+  _status = RFIDToCard(PCD_TRANSCEIVE, TagType, 1, TagType, &backBits);
+  if ((_status != MI_OK) || (backBits != 0x10)) _status = MI_ERR;
+  return _status;
+}
+
+void RFIDCRC(char *dataIn, char length, char *dataOut){
+  char i, n;
+  RFIDClearBit(DIVIRQREG, 0x04);
+  RFIDSetBit(FIFOLEVELREG, 0x80);
+
+  for ( i = 0; i < length; i++ ){
+    RFIDWrite(FIFODATAREG, *dataIn++);
+  }
+
+  RFIDWrite(COMMANDREG, PCD_CALCCRC);
+
+  i = 0xFF;
+
+  do {
+    n = RFIDRead(DIVIRQREG);
+    i--;
+  }
+  while(i && !(n & 0x04));
+
+  dataOut[0] = RFIDRead(CRCRESULTREGL);
+  dataOut[1] = RFIDRead(CRCRESULTREGM);
+}
+
+char RFIDSelectTag(char *serNum){
+  char i;
+  char _status;
+  char size;
+  unsigned recvBits;
+  char buffer[9];
+
+  buffer[0] = PICC_SElECTTAG;
+  buffer[1] = 0x70;
+
+  for ( i=2; i < 7; i++ ){
+    buffer[i] = *serNum++;
+  }
+
+  RFIDCRC(buffer, 7, &buffer[7]);
+
+  _status = RFIDToCard(PCD_TRANSCEIVE, buffer, 9, buffer, &recvBits);
+  if ((_status == MI_OK) && (recvBits == 0x18)) size = buffer[0];
+  else size = 0;
+  return size;
+}
+
+void RFIDHalt(void){
+  unsigned unLen;
+  char buff[4];
+
+  buff[0] = PICC_HALT;
+  buff[1] = 0;
+  RFIDCRC(buff, 2, &buff[2]);
+  RFIDClearBit(STATUS2REG, 0x80);
+  RFIDToCard(PCD_TRANSCEIVE, buff, 4, buff, &unLen);
+  RFIDClearBit(STATUS2REG, 0x08);
+}
+
+char RFIDAntiColl(char *serNum){
+  char _status;
+  char i;
+  char serNumCheck = 0;
+  unsigned unLen;
+
+  RFIDWrite(BITFRAMINGREG, 0x00);
+  serNum[0] = PICC_ANTICOLL;
+  serNum[1] = 0x20;
+  RFIDClearBit(STATUS2REG, 0x08);
+  _status = RFIDToCard(PCD_TRANSCEIVE, serNum, 2, serNum, &unLen);
+  if (_status == MI_OK){
+    for (i=0; i < 4; i++){
+      serNumCheck ^= serNum[i];
+    }
+    if (serNumCheck != serNum[4]) _status = MI_ERR;
+  }
+  return _status;
+}
+
+char RFIDIsCard(char *TagType){
+  if (RFIDRequest(PICC_REQIDL, TagType) == MI_OK) return 1;
+  else return 0;
+}
+
+char RFIDReadCardSerial(char *str){
+  char _status;
+  _status = RFIDAntiColl(str);
+  str[5] = 0;
+  if (_status == MI_OK) return 1;
+  else return 0;
 }
 
 static void RFIDClearBit(char addr, char mask){

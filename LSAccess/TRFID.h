@@ -117,40 +117,46 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+  #endif
 
-void initTRFID(void);
-//Pre: --
-//Post: sets initial ports and sets initial variables.
+  void initTRFID(void);
+  //Pre: --
+  //Post: sets initial ports and sets initial variables.
 
-unsigned char RFIDRead(unsigned char address)
+  unsigned char RFIDRead(unsigned char address)
 
-void RFIDWrite(unsigned char address, unsigned char value);
+  void RFIDWrite(unsigned char address, unsigned char value);
 
-void RFIDAntennaOn(void);
+  void RFIDAntennaOn(void);
 
-void RFIDAntennaOff(void);
+  void RFIDAntennaOff(void);
 
-void RFIDReset(void);
+  void RFIDReset(void);
 
-static void RFIDClearBit(char addr, char mask);
+  static void RFIDClearBit(char addr, char mask);
 
-static void RFIDSetBit(char addr, char mask);
+  static void RFIDSetBit(char addr, char mask);
 
-void motorTRFID(void);
+  char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsigned *backLen);
 
-#ifdef __cplusplus
+  char RFIDRequest(char reqMode, char *TagType);
+
+  void RFIDCRC(char *dataIn, char length, char *dataOut);
+
+  char RFIDSelectTag(char *serNum);
+
+  void RFIDHalt(void);
+
+  char RFIDAntiColl(char *serNum);
+
+  char RFIDIsCard(char *TagType);
+
+  char RFIDReadCardSerial(char *str);
+
+  void motorTRFID(void);
+
+  #ifdef __cplusplus
 } //extern C
 #endif
 
 #endif
-
-/*u
-char MFRC522_ToCard( char command, char *sendData, char sendLen, char *backData, unsigned *backLen );
-char MFRC522_Request( char reqMode, char *TagType );
-void MFRC522_CRC( char *dataIn, char length, char *dataOut );
-char MFRC522_SelectTag( char *serNum );
-void MFRC522_Halt();
-char MFRC522_AntiColl( char *serNum );
-char MFRC522_isCard( char *TagType ) ;
-char MFRC522_ReadCardSerial( char *str );*/
