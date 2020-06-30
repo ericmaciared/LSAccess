@@ -19,17 +19,19 @@ static char state;
 //------------------------ FUNCTIONS ----------------------
 
 void initTGlobalTimer(void) {
-	state = 0;
+  state = 0;
   hour = 0;
   min = 0;
   timer = TiGetTimer();
 }
 
-void motorTGlobalTimer(void){
-	switch(state){
+void motorTGlobalTimer(void) {
+  switch (state) {
     case 0:
-      if (TiGetTics(timer) >= ONEMINUTE) state = 1;
-			break;
+      if (TiGetTics(timer) >= ONEMINUTE) {
+        state = 1;
+      }
+      break;
     case 1:
       TiResetTics(timer);
       min++;
@@ -46,18 +48,18 @@ void motorTGlobalTimer(void){
       hour = 0;
       state = 0;
       break;
-	}
+  }
 }
 
-char GlGetHour(void){
-	return hour;
+char GlGetHour(void) {
+  return hour;
 }
 
-char GlGetMin(void){
-	return min;
+char GlGetMin(void) {
+  return min;
 }
 
-void GlSetTime(char hour_in, char min_in){
-	hour = hour_in;
-	min = min_in;
+void GlSetTime(char hour_in, char min_in) {
+  hour = hour_in;
+  min = min_in;
 }

@@ -112,6 +112,7 @@
 //------------------------ INCLUDES -----------------------
 
 #include <Arduino.h>
+#include "TAuthentication.h"
 
 //------------------------ FUNCTIONS ----------------------
 

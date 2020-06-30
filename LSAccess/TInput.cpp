@@ -1,4 +1,4 @@
-/*//---------------------------------------------------------
+//---------------------------------------------------------
 // @File: TInput*
 // @Purpose:
 // @Author: eric.macia
@@ -27,8 +27,8 @@ void initTInput(void) {
   state = 0;
 }
 
-void motorTInput(void){
-  switch (state){
+void motorTInput(void) {
+  switch (state) {
     case 0:
       numPress = 0;
       if (KeyCharAvailable() == 1) {
@@ -36,35 +36,43 @@ void motorTInput(void){
         key = KeyGetChar();
         state = 1;
       }
-      else if (SioCharAvailable() >= 1 && KeyCharAvailable() != 1) state = 6;
+      else if (SioCharAvailable() >= 1 && KeyCharAvailable() != 1) {
+        key = SioGetChar();
+        state = 6;
+      }
       break;
     case 1:
-      if (key == 1 && AuState() == IDLE) {
+      if (key == 1 && AuState() == IDLE_PROCESS && KeyCharAvailable() == 0) {
         AuLogin();
+        key = -1;
         state = 0;
       }
-      else if (key == 2 && AuState() == IDLE) {
+      else if (key == 2 && AuState() == IDLE_PROCESS && KeyCharAvailable() == 0) {
         AuRegister();
+        key = -1;
         state = 0;
       }
       else if (key == 10 || key == 12) {
         TiResetTics(timer);
         state = 2;
       }
-      else if (key != 10 && key != 12 && AuState() != IDLE) {
+      else if (key != 10 && key != 12 && AuState() != IDLE_PROCESS) {
         previousKey = key;
         TiResetTics(timer);
         AuAddChar(InItoa(key));
         state = 3;
       }
+      else state = 0;
       break;
     case 2:
       if (TiGetTics(timer) >= T_RESET && key == 12) {
         AuReset();
+        key = -1;
         state = 0;
       }
-      else if (TiGetTics(timer) >=T_IDLE && key == 10) {
+      else if (TiGetTics(timer) >= T_IDLE && key == 10) {
         AuIdle();
+        key = -1;
         state = 0;
       }
       else if (KeyCharAvailable() != 1 && TiGetTics(timer) < T_RESET) state = 0;
@@ -95,18 +103,21 @@ void motorTInput(void){
       }
       break;
     case 6:
+      Serial.print("Key: ");
+      Serial.println(key, DEC);
       if (key == 27) AuIdle();
-      else if (AuState() != IDLE) AuAddChar(key);
-      else if (key == '1') AuRegister();
-      else if (key == '2') AuDelete();
-      else if (key == '3') AuChangeTime();
-      else if (key == '4') AuStatistics();
+      else if (AuState() != IDLE_PROCESS) AuAddChar(key);
+      else if (key == '1' && AuState() == IDLE_PROCESS) AuRegister();
+      else if (key == '2' && AuState() == IDLE_PROCESS) AuDelete();
+      else if (key == '3' && AuState() == IDLE_PROCESS) AuChangeTime();
+      else if (key == '4' && AuState() == IDLE_PROCESS) AuStatistics();
+      key = -1;
       state = 0;
       break;
   }
 }
 
-unsigned char InItoa(char key){
+unsigned char InItoa(char key) {
   unsigned char _key = 0;
 
   if (key == 11) _key = '0';
@@ -114,23 +125,23 @@ unsigned char InItoa(char key){
   else if (key == 7) {
     if (numPress % 5 == 1) _key = '7';
     else if (numPress % 5 == 0) _key = 'S';
-    else _key = 'P' + numPress%5 - 2;
+    else _key = 'P' + numPress % 5 - 2;
   }
   else if (key == 9) {
     if (numPress % 5 == 1) _key = '9';
     else if (numPress % 5 == 0) _key = 'Z';
-    else _key = 'W' + numPress%5 - 2;
+    else _key = 'W' + numPress % 5 - 2;
   }
   else if (key == 8) {
     if (numPress % 4 == 1) _key = '8';
     else if (numPress % 4 == 0) _key = 'V';
-    else _key = 'T' + numPress%4 - 2;
+    else _key = 'T' + numPress % 4 - 2;
   }
   else {
     if (numPress % 4 == 1) _key = '0' + key;
-    else if (numPress % 4 == 0) _key = 'A' + 3*(key-2) + 2;
-    else _key = 'A' + 3*(key-2) + numPress % 4 - 2;
+    else if (numPress % 4 == 0) _key = 'A' + 3 * (key - 2) + 2;
+    else _key = 'A' + 3 * (key - 2) + numPress % 4 - 2;
   }
 
   return _key;
-}*/
+}

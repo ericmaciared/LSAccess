@@ -64,7 +64,7 @@ void motorTKeyboard(void){
     else if (digitalRead(COL0) && digitalRead(COL1) && !digitalRead(COL2)) {
       key = 3*row+3;
       state = 3;
-    }
+    }    
     else state = 0;
     break;
     case 3:
@@ -83,7 +83,7 @@ void motorTKeyboard(void){
 }
 
 char KeyCharAvailable(void){
-  return ((key != -1) ? FALSE : TRUE);
+  return ((key == -1) ? FALSE : TRUE);
 }
 
 char KeyGetChar(void){

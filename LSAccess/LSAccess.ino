@@ -1,11 +1,11 @@
 
 /*
- * File:   LSAccess.ino
- * Author: Eric Macià (eric.macia)
- *         Guillermo Sabaté (guillermo.sabate)
- *
- * Created on 24/04/2020
- */
+   File:   LSAccess.ino
+   Author: Eric Macià (eric.macia)
+           Guillermo Sabaté (guillermo.sabate)
+
+   Created on 24/04/2020
+*/
 
 //includes
 #include <string.h>
@@ -17,25 +17,36 @@
 #include "TSpeaker.h"
 #include "TEUSART.h"
 #include "TKeyboard.h"
-//#include "TInput.h"
+#include "TInput.h"
 #include "TRFID.h"
+#include "TGlobalTimer.h"
+#include "TAuthentication.h"
+//#include "TLCD.h"
+//#include "LcTLCD.h"
 
-void setup(){
+void setup() {
   initTimer();
   initTDoor();
   initTSpeaker();
   initTEUSART();
-  SioPutsCooperative("Booting...");
+  SioPutsCooperative("Booting...\n");
   initTKeyboard();
-  //initTInput();
+  initTAuthentication();
+  initTInput();
   initTRFID();
+  initTGlobalTimer();
+  //initMotorLCD();
+  //LcInit(2, 16);
 }
 
-void loop(){
+void loop() {
   motorTDoor();
   motorTSpeaker();
   motorTEUSART();
   motorTKeyboard();
-  //motorTInput();
+  motorTInput();
   motorTRFID();
+  motorTGlobalTimer();
+  motorTAuthentication();
+  //MotorLCD();
 }

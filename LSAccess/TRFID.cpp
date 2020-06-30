@@ -24,8 +24,6 @@ static char tagType;
 void initTRFID(void) {
   state = 0;
 
-  Serial.println("Starting RFID");
-
   pinMode(PIN_SDA, OUTPUT);
   pinMode(PIN_SCK, OUTPUT);
   pinMode(PIN_MOSI, OUTPUT);
@@ -51,6 +49,7 @@ void motorTRFID() {
   switch (state) {
     case 0:
       if (RFIDIsCard(&tagType)) {
+        AuRFID();
         state = 1;
       }
       break;

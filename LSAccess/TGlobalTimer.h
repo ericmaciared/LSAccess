@@ -8,7 +8,7 @@
 #ifndef _TGLOBALTIMER_H_
 #define	_TGLOBALTIMER_H_
 
-#define ONEMINUTE 60000
+#define ONEMINUTE 60000 //60 S
 #define ONEHOUR 60
 #define ONEDAY 24
 #define TRUE 1

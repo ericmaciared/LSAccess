@@ -47,4 +47,4 @@ User* UsGetUser(void);
 } // extern "C"
 #endif
 
-#endif // USER_LIST
+#endif

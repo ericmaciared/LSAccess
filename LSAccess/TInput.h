@@ -1,4 +1,4 @@
-/*//---------------------------------------------------------
+//---------------------------------------------------------
 // @File: TInput*
 // @Purpose:
 // @Author: eric.macia
@@ -8,7 +8,7 @@
 #ifndef _TINPUT_H_
 #define _TINPUT_H_
 
-#define IDLE 1
+#define IDLE_PROCESS 1
 
 #define T_PRESS 500  //500 mS
 #define T_IDLE 3000 //3 S
@@ -20,6 +20,7 @@
 #include "TTimer.h"
 #include "TKeyboard.h"
 #include "TEUSART.h"
+#include "TAuthentication.h"
 
 //------------------------ FUNCTIONS ----------------------
 
@@ -39,4 +40,4 @@ unsigned char InItoa(char key);
 } // extern "C"
 #endif
 
-#endif*/
+#endif

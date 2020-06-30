@@ -36,7 +36,6 @@ void initTUser(void) {
 }
 
 User* UsGetUser(void) {
-
   User* aux = &users[i++];
   if (i == MAX_USERS) i = 0;
   return aux;
