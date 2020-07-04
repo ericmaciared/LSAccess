@@ -13,7 +13,7 @@
 
 static char timer;
 static char hour;
-static char min;
+static char mins;
 static char state;
 
 //------------------------ FUNCTIONS ----------------------
@@ -21,7 +21,7 @@ static char state;
 void initTGlobalTimer(void) {
   state = 0;
   hour = 0;
-  min = 0;
+  mins = 0;
   timer = TiGetTimer();
 }
 
@@ -34,12 +34,12 @@ void motorTGlobalTimer(void) {
       break;
     case 1:
       TiResetTics(timer);
-      min++;
-      if (min >= ONEHOUR) state = 2;
+      mins++;
+      if (mins >= ONEHOUR) state = 2;
       else state = 0;
       break;
     case 2:
-      min = 0;
+      mins = 0;
       hour++;
       if (hour >= ONEDAY) state = 3;
       else state = 0;
@@ -56,10 +56,19 @@ char GlGetHour(void) {
 }
 
 char GlGetMin(void) {
-  return min;
+  return mins;
 }
 
-void GlSetTime(char hour_in, char min_in) {
-  hour = hour_in;
-  min = min_in;
+void GlSetTime(char hour_in1, char hour_in2, char min_in1, char min_in2) {
+//  Serial.print("Hour -");
+//  Serial.print(hour_in1);
+//  Serial.print("-");
+//  Serial.print(hour_in2);
+//  Serial.print("- Min -");
+//  Serial.print(min_in1);
+//  Serial.print("-");
+//  Serial.print(min_in2);
+//  Serial.println("-");
+  hour = (hour_in1 - '0') * 10 + hour_in2 - '0';
+  mins = (min_in1 - '0') * 10 + min_in2 - '0';
 }

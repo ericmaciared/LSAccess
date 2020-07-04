@@ -103,11 +103,11 @@
 #define     RESERVED33            0x3E
 #define     RESERVED34            0x3F
 
-#define PIN_SDA 9
-#define PIN_SCK 52
+#define PIN_SDA 20
+#define PIN_SCK 21
 #define PIN_MOSI 51
 #define PIN_MISO 50
-#define PIN_RST 8
+#define PIN_RST 52
 
 //------------------------ INCLUDES -----------------------
 

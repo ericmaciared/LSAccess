@@ -8,7 +8,7 @@
 #ifndef _TUSER_H_
 #define _TUSER_H_
 
-#define MAX_USERS 231
+#define MAX_USERS 20
 #define MAX_NAME_SIZE 10
 
 #define IN 1

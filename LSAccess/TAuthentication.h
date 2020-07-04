@@ -8,12 +8,16 @@
 #ifndef _TAUTHENTICATION_H_
 #define _TAUTHENTICATION_H_
 
-#define IDLE_PROCESS 1
-#define LOGIN 2
-#define RFID 3
-#define REGISTER 4
-#define CHANGE_TIME 5
-#define STATISTICS 6
+#define PROCESS_IDLE 1
+#define PROCESS_LOGIN 2
+#define PROCESS_REGISTER_K 3
+#define PROCESS_REGISTER_C 4
+#define PROCESS_DELETE 5
+#define PROCESS_TIME 6
+#define PROCESS_STATISTICS 7
+#define PROCESS_RFID 8
+
+#define BUFFER_SIZE 16
 
 //------------------------ INCLUDES -----------------------
 
@@ -37,10 +41,6 @@ void initTAuthentication(void);
 
 void motorTAuthentication(void);
 
-void AuAuthenticate(unsigned char* uid);
-//Pre: --
-//Post: Authenticates user with UID.
-
 void AuIdle(void);
 //Pre: --
 //Post: The system moves to an idle state.
@@ -49,17 +49,17 @@ void AuLogin(void);
 //Pre: --
 //Post: Sets process state to Login.
 
-void AuRFID(void);
+void AuRegisterK(void);
 //Pre: --
-//Post: Sets process state to RFID login.
+//Post: Sets process state to Register from Keyboard.
 
-void AuRegister(void);
+void AuRegisterC(void);
 //Pre: --
-//Post: Sets process state to Register.
+//Post: Sets process state to Register from Computer.
 
 void AuDelete(void);
 //Pre: --
-//Post: Deletes user with follwoing uid.
+//Post: Sets process state to delete user;
 
 void AuChangeTime(void);
 //Pre: --
@@ -69,17 +69,25 @@ void AuStatistics(void);
 //Pre: --
 //Post: Starts sending statistics process.
 
+void AuRFID(void);
+//Pre: --
+//Post: Sets process state to RFID login.
+
 void AuReset(void);
 //Pre: --
 //Post: The system resets.
 
-void AuAddChar(char input);
+void AuAddChar(char* input);
 //Pre: --
 //Post: Sends received char to Authentication module.
 
-void AuSwitchChar(char input);
+void AuSwitchChar(char* input);
 //Pre: --
 //Post: Switches previous char with new char.
+
+void AuFinishChar(void);
+//Pre: --
+//Post: indicates last char sent is already fixed
 
 char AuState(void);
 //Pre: --

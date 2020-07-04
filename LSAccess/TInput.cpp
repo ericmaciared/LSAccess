@@ -48,7 +48,7 @@ void motorTInput(void) {
         state = 0;
       }
       else if (key == 2 && AuState() == IDLE_PROCESS && KeyCharAvailable() == 0) {
-        AuRegister();
+        AuRegisterK();
         key = -1;
         state = 0;
       }
@@ -78,11 +78,19 @@ void motorTInput(void) {
       else if (KeyCharAvailable() != 1 && TiGetTics(timer) < T_RESET) state = 0;
       break;
     case 3:
-      if (TiGetTics(timer) >= T_PRESS) state = 0;
+      if (TiGetTics(timer) >= T_PRESS){
+        previousKey = -1;
+        AuFinishChar();
+        state = 0;
+      }
       else if (TiGetTics(timer) < T_PRESS && KeyCharAvailable() == 0) state = 4;
       break;
     case 4:
-      if (TiGetTics(timer) >= T_PRESS) state = 0;
+      if (TiGetTics(timer) >= T_PRESS){
+        previousKey = -1;
+        AuFinishChar();
+        state = 0;
+      }
       else if (TiGetTics(timer) < T_PRESS && KeyCharAvailable() == 1) {
         numPress++;
         key = KeyGetChar();
@@ -103,11 +111,9 @@ void motorTInput(void) {
       }
       break;
     case 6:
-      Serial.print("Key: ");
-      Serial.println(key, DEC);
       if (key == 27) AuIdle();
-      else if (AuState() != IDLE_PROCESS) AuAddChar(key);
-      else if (key == '1' && AuState() == IDLE_PROCESS) AuRegister();
+      else if (AuState() != IDLE_PROCESS && key != 10) AuAddChar(key);
+      else if (key == '1' && AuState() == IDLE_PROCESS) AuRegisterC();
       else if (key == '2' && AuState() == IDLE_PROCESS) AuDelete();
       else if (key == '3' && AuState() == IDLE_PROCESS) AuChangeTime();
       else if (key == '4' && AuState() == IDLE_PROCESS) AuStatistics();

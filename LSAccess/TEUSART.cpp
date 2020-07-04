@@ -22,6 +22,9 @@ void initTEUSART(void){
   //in channel 0 (default)
   //TX: PIN 1
   //RX: PIN 0
+  howManyTX = 0;
+  initTX = 0;
+  endTX = 0;  
 }
 
 void motorTEUSART(void){

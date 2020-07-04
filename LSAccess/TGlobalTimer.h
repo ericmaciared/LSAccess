@@ -8,7 +8,7 @@
 #ifndef _TGLOBALTIMER_H_
 #define	_TGLOBALTIMER_H_
 
-#define ONEMINUTE 60000 //60 S
+#define ONEMINUTE 6000 //60 S
 #define ONEHOUR 60
 #define ONEDAY 24
 #define TRUE 1
@@ -31,10 +31,6 @@ void initTGlobalTimer(void);
 //Pre: timer ADT has been initialized.
 //Post: asks for a timer and sets initial variables.
 
-void GlSetTime(char hour, char min);
-//Pre: --
-//Post: Sets global time to given values
-
 char GlGetHour(void);
 //Pre: --
 //Post: Returns global hour.
@@ -42,6 +38,10 @@ char GlGetHour(void);
 char GlGetMin(void);
 //Pre: --
 //Post: Return global mins.
+
+void GlSetTime(char hour_in1, char hour_in2, char min_in1, char min_in2);
+//Pre: --
+//Post: Sets global time to given values
 
 #ifdef __cplusplus
 } // extern "C"

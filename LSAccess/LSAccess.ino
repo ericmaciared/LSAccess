@@ -21,8 +21,8 @@
 #include "TRFID.h"
 #include "TGlobalTimer.h"
 #include "TAuthentication.h"
-//#include "TLCD.h"
-//#include "LcTLCD.h"
+#include "TLCD.h"
+#include "LcTLCD.h"
 
 void setup() {
   initTimer();
@@ -31,12 +31,13 @@ void setup() {
   initTEUSART();
   SioPutsCooperative("Booting...\n");
   initTKeyboard();
+  initTUser();
   initTAuthentication();
   initTInput();
   initTRFID();
   initTGlobalTimer();
-  //initMotorLCD();
-  //LcInit(2, 16);
+  initMotorLCD();
+  LcInit(2, 16);
 }
 
 void loop() {
@@ -48,5 +49,5 @@ void loop() {
   motorTRFID();
   motorTGlobalTimer();
   motorTAuthentication();
-  //MotorLCD();
+  MotorLCD();
 }
