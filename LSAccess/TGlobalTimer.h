@@ -35,6 +35,14 @@ char GlGetHour(void);
 //Pre: --
 //Post: Returns global hour.
 
+char GlCountMins(void);
+//Pre: --
+//Post: Returns number of minutes passed since last update of users.
+
+void GlCountMinus(void);
+//Pre: counterMins > 0
+//Post: counterMins--
+
 char GlGetMin(void);
 //Pre: --
 //Post: Return global mins.

@@ -1,115 +1,101 @@
+//---------------------------------------------------------
+// @File: TDoor*
+// @Purpose:
+// @Author: eric.macia
+// @Data: 03/05/2020
+//---------------------------------------------------------
 
-#include "TTimer.h"
-#include "LcTLCD.h"
+//------------------------ INCLUDES -----------------------
+
 #include "TLCD.h"
-#include "Arduino.h"
-#define END_OF_MSG '\n'
-#define SIZE_INPUT_MSG 7
-static char stateLCD;
-static unsigned char timerLCD, displayed, left_to_display;
-static char row_num, new_msg, mode, curr_char, finished;
-static char *rcvd_msg = NULL;
 
-void displayMsg(char msg[]) {
-  rcvd_msg = msg;
-  Serial.println(rcvd_msg);
-  new_msg = 1;
-  //row_num = 1;
-}
+//------------------------ VARIABLES ----------------------
 
-void initMotorLCD(void) {
-  timerLCD = TiGetTimer();
+static char state;
+static unsigned char timer, displayed1, leftDisplay1, displayed2, leftDisplay2;
+static char newMsg, mode, current, finished;
+static char *rcMsg1 = NULL;
+static char *rcMsg2 = NULL;
+
+//------------------------ FUNCTIONS ----------------------
+
+void initLCD(void) {
+  timer = TiGetTimer();
   LcClear();
   LcGotoXY(0, 0);
-  displayed = left_to_display = 0;
-  row_num = 0;
-  new_msg = 0;
+  displayed1 = leftDisplay1 = displayed2 = leftDisplay2 = 0;
+  newMsg = 0;
   mode = DISPLAY_MSG;
-  stateLCD = curr_char = finished = 0;
+  state = current = finished = 0;
   LcCursorOff();
 }
 
-void MotorLCD () {
-  switch (stateLCD) {
-    case 0:
-      if (mode == DISPLAY_MSG) {
-        stateLCD = 1;
-      }
-      else if (mode == DISPLAY_INPUT) {
-        LcPutChar(pgm_read_word_near(INPUT_MSG_ + displayed));
-        ++displayed;
-        stateLCD = 5;
-      }
-      break;
-    case 1:
-      if (new_msg) {
-        LcGotoXY(0, row_num - 1);
-        new_msg = 0;
-        stateLCD = 2;
-      }
-      break;
-    case 5:
-      if (displayed + 1 > SIZE_INPUT_MSG) {
-        displayed = 0;
-        stateLCD = 6;
-      }
-      else if (displayed + 1 <= SIZE_INPUT_MSG) {
-        LcPutChar(pgm_read_word_near(INPUT_MSG_ + displayed));
-        ++displayed;
-      }
-      break;
-    case 2:
-      if (*rcvd_msg != END_OF_MSG && displayed <= 16) {
-        LcPutChar(*rcvd_msg);
-        ++rcvd_msg;
-        ++displayed;
-      }
-      else if (displayed > 16) {
-        TiResetTics(timerLCD);
-        stateLCD = 3;
-      }
-      else if (*rcvd_msg == END_OF_MSG) {
-        TiResetTics(timerLCD);
-        stateLCD = 4;
-      }
-      else if (new_msg == 1) {
-        stateLCD = 1;
-      }
-      else if (mode != DISPLAY_MSG) {
-        stateLCD = 0;
-      }
-      break;
-    case 3:
-      if (TiGetTics(timerLCD) > MOVE_TIME) {
-        LcGotoXY(0, row_num - 1);
-        rcvd_msg -= (displayed - 1);
-        left_to_display++;
-        displayed = 0;
-        stateLCD = 2;
-      }
-      break;
-    case 4:
-      if (TiGetTics(timerLCD) > FINISH_TIME) {
-        LcGotoXY(0, row_num - 1);
-        rcvd_msg -= (displayed + left_to_display);
-        displayed = 0;
-        left_to_display = 0;
-        stateLCD = 2;
-      }
-      break;
-    case 6:
-      if (mode != DISPLAY_INPUT) {
-        stateLCD = 0;
-      }
-      else if (mode == DISPLAY_INPUT && curr_char > 0) {
-        LcGotoXY(SIZE_INPUT_MSG + displayed, 0);
-        LcPutChar(curr_char);
-        displayed += finished;
-        finished = 0;
-        curr_char = 0;
-      }
-      break;
+void LCDDisplay(char msg[], char row) {
+  if (row == 1){
+    rcMsg1 = msg;
+    displayed1 = leftDisplay1 = 0;
   }
+  if (row == 2){
+    rcMsg2 = msg;
+    displayed2 = leftDisplay2 = 0;
+  }
+  newMsg = 1;
+}
+
+void printFirst() {
+  if (rcMsg1 == NULL) return;
+  LcGotoXY(displayed1, 0);
+  LcPutChar(*rcMsg1);
+  ++rcMsg1;
+  ++displayed1;
+}
+
+void printSecond(void) {
+  if (rcMsg2 == NULL || *rcMsg2 == END_OF_MSG) return;
+  LcGotoXY(displayed2, 1);
+  LcPutChar(*rcMsg2);
+  ++rcMsg2;
+  ++displayed2;
+}
+
+void updateFirst(void) {
+  rcMsg1 -= (displayed1 - 1);
+  leftDisplay1++;
+  displayed1 = 0;
+}
+
+void updateSecond(void) {
+  rcMsg2 -= (displayed2 - 1);
+  leftDisplay2++;
+  displayed2 = 0;
+}
+
+void updateRows(void) {
+  if (displayed1 > 16) updateFirst();
+  if (displayed2 > 16) updateSecond();
+}
+
+void resetFirst(void) {
+  rcMsg1 -= (displayed1 + leftDisplay1);
+  displayed1 = 0;
+  leftDisplay1 = 0;
+}
+
+void resetSecond(void) {
+  rcMsg2 -= (displayed2 + leftDisplay2);
+  displayed2 = 0;
+  leftDisplay2 = 0;
+}
+
+void resetRows(void) {
+  if (*rcMsg1 == END_OF_MSG){
+    resetFirst();
+  }
+  if (*rcMsg2 == END_OF_MSG) resetSecond();
+}
+
+char ableToPrint() {
+  return (*rcMsg1 != END_OF_MSG && displayed1 <= 16) ;//|| (*rcMsg2 != END_OF_MSG && displayed2 <= 16);
 }
 
 void setMode(char _mode) {
@@ -117,7 +103,7 @@ void setMode(char _mode) {
 }
 
 void setCharInput(char c) {
-  curr_char = c;
+  current = c;
 }
 
 void setDisplayMsgMode(void) {
@@ -129,8 +115,86 @@ void setDisplayInputMode(void) {
 }
 
 void finishInput(void) {
-  displayed++;
+  displayed1++;
   finished = 0;
-  curr_char = 0;
-  Serial.println("finished");
+  current = 0;
+}
+
+void motorLCD () {
+  switch (state) {
+    case 0:
+      if (mode == DISPLAY_MSG) {
+        state = 1;
+      }
+      else if (mode == DISPLAY_INPUT) {
+        LcPutChar(pgm_read_word_near(INPUT_MSG_ + displayed1));
+        ++displayed1;
+        state = 5;
+      }
+      break;
+    case 1:
+      if (newMsg) {
+        LcClear();
+        newMsg = 0;
+        state = 2;
+      }
+      break;
+    case 5:
+      if (displayed1 + 1 > SIZE_INPUT_MSG) {
+        displayed1 = 0;
+        state = 6;
+      }
+      else if (displayed1 + 1 <= SIZE_INPUT_MSG) {
+        LcPutChar(pgm_read_word_near(INPUT_MSG_ + displayed1));
+        ++displayed1;
+      }
+      break;
+    case 2:
+      if (newMsg == 1) {
+        resetFirst();
+        resetSecond();
+        state = 1;
+      }
+      else if (mode != DISPLAY_MSG) {
+        state = 0;
+      }
+      else if (ableToPrint()) {
+        printFirst();
+        printSecond();
+      }
+      else if (displayed1 > 16) {
+        TiResetTics(timer);
+        state = 3;
+      }
+      else if (*rcMsg1 == END_OF_MSG) {
+        TiResetTics(timer);
+        state = 4;
+      }
+      break;
+    case 3:
+      if (TiGetTics(timer) > MOVE_TIME) {
+        updateRows();
+        //resetRows();
+        state = 2;
+      }
+      break;
+    case 4:
+      if (TiGetTics(timer) > FINISH_TIME) {
+        resetRows();
+        state = 2;
+      }
+      break;
+    case 6:
+      if (mode != DISPLAY_INPUT) {
+        state = 0;
+      }
+      else if (mode == DISPLAY_INPUT && current > 0) {
+        LcGotoXY(SIZE_INPUT_MSG + displayed1, 0);
+        LcPutChar(current);
+        displayed1 += finished;
+        finished = 0;
+        current = 0;
+      }
+      break;
+  }
 }

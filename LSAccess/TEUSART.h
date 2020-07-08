@@ -39,6 +39,10 @@ char SioGetChar(void);
 void SioSendChar(char c);
 // Post: Waits until the previous character has been sent and sends this one.
 
+char SioTxReady(void);
+// Pre: --
+// Post: Returns 1 if nothing to send.
+
 void SioPutsCooperative(char *s);
 //Pre: The reference to the char *s is a const char or I can guaranty that
 //     it won't be overwritten until it has been send.

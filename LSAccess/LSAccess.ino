@@ -34,10 +34,11 @@ void setup() {
   initTUser();
   initTAuthentication();
   initTInput();
-  initTRFID();
+  //initTRFID();
   initTGlobalTimer();
-  initMotorLCD();
+  initLCD();
   LcInit(2, 16);
+  LCDDisplay("Booting\n", 1);
 }
 
 void loop() {
@@ -46,8 +47,8 @@ void loop() {
   motorTEUSART();
   motorTKeyboard();
   motorTInput();
-  motorTRFID();
+  //motorTRFID();
   motorTGlobalTimer();
   motorTAuthentication();
-  MotorLCD();
+  motorLCD();
 }

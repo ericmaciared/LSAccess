@@ -10,9 +10,9 @@
 
 #define DOOR 22      //Door OUTPUT PIN
 
-#define TIME_PWM 200 //20 mS
-#define T_HIGH 135   //13.5 mS
-#define T_OPEN 30000 //3 S
+#define TIME_PWM 20 //20 mS
+#define T_HIGH 13   //13.5 mS
+#define T_OPEN 3000 //3 S
 
 //------------------------ INCLUDES -----------------------
 

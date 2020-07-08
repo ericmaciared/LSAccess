@@ -45,14 +45,62 @@ void initTUser(void) {
   users[0].maxTime[1] = 59;
   users[0].minStay = 0;
 
-  users[0].status = OUT;
+  users[0].status = IN;
+
+  users[10].uid[0] = 0xAC;
+  users[10].uid[1] = 0xEF;
+  users[10].uid[2] = 0x96;
+  users[10].uid[3] = 0xAC;
+  users[10].uid[4] = 0xEF;
+
+  users[10].name[0] = 'T';
+  users[10].name[1] = 'e';
+  users[10].name[2] = 's';
+  users[10].name[3] = 't';
+  users[10].name[4] = 'i';
+  users[10].name[5] = 'n';
+  users[10].name[6] = 'g';
+  users[10].name[7] = '\0';
+
+  users[10].minTime[0] = 12;
+  users[10].minTime[1] = 0;
+  users[10].maxTime[0] = 12;
+  users[10].maxTime[1] = 59;
+  users[10].minStay = 100;
+
+  users[10].status = IN;
+
+  users[3].uid[0] = 0x12;
+  users[3].uid[1] = 0x23;
+  users[3].uid[2] = 0x34;
+  users[3].uid[3] = 0x45;
+  users[3].uid[4] = 0x56;
+
+  users[3].name[0] = 'T';
+  users[3].name[1] = 'e';
+  users[3].name[2] = 't';
+  users[3].name[3] = 'e';
+  users[3].name[4] = 's';
+  users[3].name[5] = 'i';
+  users[3].name[6] = 'k';
+  users[3].name[7] = 'o';
+  users[3].name[8] = '\0';
+
+  users[3].minTime[0] = 9;
+  users[3].minTime[1] = 0;
+  users[3].maxTime[0] = 17;
+  users[3].maxTime[1] = 30;
+  users[3].minStay = 350;
+
+  users[3].status = OUT;
+
 
   i = 0;
 }
 
 User* UsGetUser(void) {
-//  User* aux = &users[i++];
-//  if (i == MAX_USERS) i = 0;
-//  return aux;
-return &users[0];
+  User* aux = &users[i];
+  if (i == MAX_USERS - 1) i = 0;
+  else i++;
+  return aux;
 }

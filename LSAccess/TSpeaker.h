@@ -10,9 +10,9 @@
 
 #define SPEAKER 23      //Speaker OUTPUT PIN
 
-#define T_BEEP 20 //250 mS
-#define T_PWM 2 //2 mS
-#define T_HIGH 1  //1 mS
+#define T_BEEP 400 //500 mS
+#define T_PWM 4 //4 mS
+#define T_HIGH 2  //2 mS
 
 //------------------------ INCLUDES -----------------------
 

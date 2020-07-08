@@ -19,6 +19,13 @@ static unsigned char ucResult = 0;
 static unsigned char UID[16];
 static char tagType;
 
+static char _status = MI_ERR;
+static char irqEn = 0x00;
+static char waitIRq = 0x00;
+static char lastBits;
+static char n;
+static unsigned j;
+
 //------------------------ FUNCTIONS ----------------------
 
 void initTRFID(void) {
@@ -48,16 +55,25 @@ void initTRFID(void) {
 void motorTRFID() {
   switch (state) {
     case 0:
-      if (RFIDIsCard(&tagType)) {
-        AuRFID();
+      if (AuState()) {
         state = 1;
       }
       break;
     case 1:
+      if (AuState() == 0) {
+        state = 0;
+      }
+      else if (RFIDIsCard(&tagType)) {
+        AuRFID();
+        state = 2;
+      }
+      break;
+    case 2:
       if (RFIDReadCardSerial(UID)) {
-        Serial.print ("UID:");
+        Serial.print("UID: ");
         for (i = 0; i < 5; i++) {
-          Serial.print (UID[i], HEX);
+          Serial.print(UID[i], HEX);
+          AuAddChar(UID[i]);
         }
         Serial.println();
         RFIDHalt();
@@ -144,13 +160,6 @@ void RFIDReset(void) {
 }
 
 char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsigned *backLen) {
-  static char _status = MI_ERR;
-  static char irqEn = 0x00;
-  static char waitIRq = 0x00;
-  static char lastBits;
-  static char n;
-  static unsigned i;
-
   switch (command) {
     case PCD_AUTHENT:
       irqEn = 0x12;
@@ -169,23 +178,23 @@ char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsi
   RFIDSetBit(FIFOLEVELREG, 0x80);
   RFIDWrite(COMMANDREG, PCD_IDLE);
 
-  for ( i = 0; i < sendLen; i++ ) {
-    RFIDWrite(FIFODATAREG, sendData[i]);
+  for (j = 0; j < sendLen; j++ ) {
+    RFIDWrite(FIFODATAREG, sendData[j]);
   }
 
   RFIDWrite(COMMANDREG, command);
   if (command == PCD_TRANSCEIVE) RFIDSetBit(BITFRAMINGREG, 0x80);
 
-  i = 0xFFFF;
+  j = 0xFFFF;
   do {
     n = RFIDRead(COMMIRQREG);
-    i--;
+    j--;
   }
-  while (i && !(n & 0x01) && !(n & waitIRq));
+  while (j && !(n & 0x01) && !(n & waitIRq));
   RFIDClearBit(BITFRAMINGREG, 0x80);
 
-  if (i != 0) {
-    if ( !(RFIDRead(ERRORREG) & 0x1B)) {
+  if (j != 0) {
+    if (!(RFIDRead(ERRORREG) & 0x1B)) {
       _status = MI_OK;
       if (n & irqEn & 0x01) {
         _status = MI_NOTAGERR;
@@ -198,10 +207,10 @@ char RFIDToCard(char command, char *sendData, char sendLen, char *backData, unsi
         if (n == 0) n = 1;
         if (n > 16) n = 16;
 
-        for (i = 0; i < n; i++) {
-          backData[i] = RFIDRead( FIFODATAREG );
+        for (j = 0; j < n; j++) {
+          backData[j] = RFIDRead( FIFODATAREG );
         }
-        backData[i] = 0;
+        backData[j] = 0;
       }
     }
     else _status = MI_ERR;

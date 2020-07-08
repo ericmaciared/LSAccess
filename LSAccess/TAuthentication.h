@@ -8,6 +8,8 @@
 #ifndef _TAUTHENTICATION_H_
 #define _TAUTHENTICATION_H_
 
+#define TO_HEX(ascii_value) ((ascii_value > 57)? (ascii_value-55):(ascii_value-48))
+
 #define PROCESS_IDLE 1
 #define PROCESS_LOGIN 2
 #define PROCESS_REGISTER_K 3
@@ -27,6 +29,7 @@
 #include "TGlobalTimer.h"
 #include "TSpeaker.h"
 #include "TDoor.h"
+#include "TLCD.h"
 #include "TEUSART.h"
 
 //------------------------ FUNCTIONS ----------------------
@@ -88,6 +91,10 @@ void AuSwitchChar(char* input);
 void AuFinishChar(void);
 //Pre: --
 //Post: indicates last char sent is already fixed
+
+void AuFinishInput(void);
+//Pre: --
+//Post: indicates last string sent is finished
 
 char AuState(void);
 //Pre: --

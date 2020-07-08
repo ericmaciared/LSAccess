@@ -112,7 +112,8 @@ void motorTInput(void) {
       break;
     case 6:
       if (key == 27) AuIdle();
-      else if (AuState() != IDLE_PROCESS && key != 10) AuAddChar(key);
+      else if (AuState() != IDLE_PROCESS && key != 10 && key != 13) AuAddChar(key);
+      else if (key == '\n' || key == '\r' || key == 10 || key == 13) AuFinishInput();
       else if (key == '1' && AuState() == IDLE_PROCESS) AuRegisterC();
       else if (key == '2' && AuState() == IDLE_PROCESS) AuDelete();
       else if (key == '3' && AuState() == IDLE_PROCESS) AuChangeTime();
