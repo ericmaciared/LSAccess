@@ -1,0 +1,144 @@
+
+//Interface 0 AUTHENTICATION -> USERS
+User* UsGetUser(unsigned char index);
+//Pre: 0 < index < usersRegistered
+//Post: return pointer to user in index.
+
+User* UsRegisterUser(void);
+//Pre: There is enough space to register a new user.
+//Post: Returns pointer to new user space.
+
+void UsDeleteUser(User* user);
+//Pre: The pointer contains a user.
+//Post: Deletes data in index pointer.
+
+//Interface 1 AUTHENTICATION -> LCD
+void LcDisplayWelcome(User* user, unsigned char* uid);
+//Pre: --
+//Post: Displays welcome message with name if registered as well as the UID
+//for 3 seconds in the LCD Display
+
+void LcDisplayIntroduceUID(void);
+//Pre: --
+//Post: Displays 'Introduce UID: ' in LCD display first row
+
+void LcDisplayIntroduceName(void);
+//Pre: --
+//Post: Displays 'introduce name:' in LCD display first row
+
+void LcDisplayChar(char charToDisplay);
+//Pre: --
+//Post: Adds char to list of chars to display in second row
+
+//Interface 2 AUTHENTICATION -> SPEAKER
+void SpAddBeeps(char numBeeps);
+//Pre: --
+//Post: Sets number of beeps to sound in speaker.
+
+//Interface 3 AUTHENTICATION -> DOOR
+void DoOpenDoor(void);
+//Pre: --
+//Post: Opens door for 3 seconds.
+
+//Interface 4 INPUT -> EUSART
+char SioCharAvailable(void);
+//Pre: --
+//Post: returns 1 if there are receives available.
+
+char SioGetChar(void);
+//Pre: SioCharAvailable == 1
+//Post: returns received value from RX.
+
+//Interface 5 INPUT -> KEYBOARD
+char KeyCharAvailable(void);
+//Pre: --
+//Post: returns 1 if there are values available.
+
+char KeyGetChar(void);
+//Pre: KeyCharAvailable() == 1
+//Post: Returns value pressed from keyboard.
+
+//Interface 6 GLOBALTIME -> TIMER
+//Interface 7 DOOR -> TIMER
+//Interface 8 SPEAKER -> TIMER
+//Interface 9 KEYPAD -> TIMER
+//Interface 10 BACKLIGHT -> TIMER
+//Interface 11 LCD -> TIMER
+void TiResetTics(char Handle);
+//Pre: 0<Handle<MAXTIMERS.
+//Post: Writes in the tics of the Handle timer the universal tics of the system.
+
+int TiGetTics(char Handle);
+//Pre: 0<Handle<MAXTIMERS.
+//Post: Less than 32767 tics have passed since the last TiResetTics.
+//Post: Returns the number of tics from the last TiResetTics for the Handle timer.
+
+char TiGetTimer(void);
+//Pre: There are free timers.
+//Post: Returns the Handler of a timer and marks it as busy.
+//Post:	If there are not free timers left, returns a -1.
+
+void TiFreeTimer (char Handle);
+//Pre: 0<Handle<MAXTIMERS.
+//Post: The Handle timer is marked as free.
+
+//Interface 12 AUTHENTICATION -> GLOBALTIME
+void GlSetTime(char hour, char min);
+//Pre: --
+//Post: Sets global time to given values
+
+char GlGetHour(void);
+//Pre: --
+//Post: Returns global hour.
+
+char GlGetMin(void);
+//Pre: --
+//Post: Return global mins.
+
+//Interface 13 RFID -> AUTHENTICATION
+void AuAuthenticate(unisgned char* uid);
+//Pre: --
+//Post: Authenticates user with UID.
+
+//Interface 14 INPUT -> AUTHENTICATION
+void AuIdle(void);
+//Pre: --
+//Post: The system moves to an idle state.
+
+void AuLogin(void);
+//Pre: --
+//Post: Sets process state to Login.
+
+void AuRegister(void);
+//Pre: --
+//Post: Sets process state to Register.
+
+void AuChangeTime(void);
+//Pre: --
+//Post: Sets process state to Change Time
+
+void AuStatistics(void);
+//Pre: --
+//Post: Starts sending statistics process.
+
+void AuReset(void);
+//Pre: --
+//Post: The system resets.
+
+void AuAddChar(char input);
+//Pre: --
+//Post: Sends received char to Authentication module.
+
+void AuSwitchChar(char input);
+//Pre: --
+//Post: Switches previous char with new char.
+
+char AuState(void);
+//Pre: --
+//Post: 1 if state is idle.
+
+//Interface 15 AUTHENTICATION -> EUSART
+void SioPutsCooperatiu(char* input);
+//Pre: The reference to the char *s is a const char or I can guaranty that
+//     it won't be overwritten until it has been send.
+//Post: Add *s at the queue of chains to send...
